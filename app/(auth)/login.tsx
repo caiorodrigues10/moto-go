@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
@@ -8,117 +8,137 @@ import { TextInputCustom } from "../../components/TextInputCustom";
 import { BodyPage } from "../../components/Themed";
 import { router } from "expo-router";
 import { GilroyText } from "../../components/GilroyText";
+import { login } from "@/services/auth";
+import { phoneMask } from "@/providers/maskProviders";
+import { SelectItems } from "@/components/SelectItems";
+import { flags } from "@/constants/flags";
+import { useToast } from "react-native-toast-notifications";
+import { useAppContext } from "@/context/AppContext";
 
 const schema = z.object({
-  email: z
-    .string({ required_error: "Email é obrigatório" })
-    .email("Email inválido"),
-  password: z
-    .string({ required_error: "Senha é obrigatória" })
-    .min(6, "A senha deve ter pelo menos 6 caracteres"),
+  telephone: z
+    .string({ required_error: "Telefone é obrigatório" })
+    .min(10, "Telefone inválido"),
 });
 
+type ILogin = z.infer<typeof schema>;
+
 export default function Login() {
-  const [secureTextEntryIsActive, setSecureTextEntryIsActive] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [codePhone, setCodePhone] = useState("+55");
+
+  const { setTelephone, telephone } = useAppContext();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+    setValue,
+  } = useForm<ILogin>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      telephone,
+    },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const handleSelect = (option: { label: string; value: string }) => {
+    console.log("Selected option:", option);
+    setCodePhone(option.value);
   };
+
+  const toast = useToast();
+
+  const onSubmit = useCallback(
+    async (data: ILogin) => {
+      setIsLoading(true);
+      const newData = { telephone: data.telephone } as ILogin;
+
+      const response = await login(newData);
+
+      if (response.result === "success") {
+        toast.show(response.message, {
+          type: "success",
+          placement: "top",
+        });
+        setTelephone(data.telephone);
+        router.replace("/(auth)/validatePin");
+      } else {
+        toast.show(response.message, {
+          type: "danger",
+          placement: "top",
+        });
+      }
+      setIsLoading(false);
+    },
+    [toast]
+  );
 
   return (
     <BodyPage style={styles.bodyPage}>
       <GilroyText style={styles.title}>Entrar</GilroyText>
       <View style={styles.formContainer}>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInputCustom
-              onBlur={onBlur}
-              value={value}
-              onChangeText={onChange}
-              isInvalid={!!errors.email}
-              errorMessage={String(errors.email?.message)}
-              left={
-                <TextInput.Icon
-                  icon="email"
-                  color={(isTextInputFocused) =>
-                    isTextInputFocused || value ? "#ffffff" : "#ffffff70"
-                  }
-                />
-              }
-              placeholder="Email"
-            />
-          )}
-        />
-
-        <View style={styles.passwordContainer}>
+        <View style={styles.selectContainer}>
+          <SelectItems
+            options={flags.map((e) => ({
+              label: `${e.flag} ${e.code}  |  ${e.name}`,
+              value: e.code,
+              showValue: `${e.flag} ${e.code} `,
+            }))}
+            onSelect={handleSelect}
+            placeholder=""
+            defaultValue="+55"
+            styles={{
+              styleList: { minWidth: 200 },
+            }}
+          />
           <Controller
-            name="password"
+            name="telephone"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInputCustom
                 onBlur={onBlur}
-                onChangeText={onChange}
-                placeholder="Senha"
-                isInvalid={!!errors.password}
-                errorMessage={String(errors.password?.message)}
-                secureTextEntry={secureTextEntryIsActive}
-                right={
-                  <TextInput.Icon
-                    icon={secureTextEntryIsActive ? "eye-off" : "eye"}
-                    onPress={() => setSecureTextEntryIsActive((prev) => !prev)}
-                    color={(isTextInputFocused) =>
-                      isTextInputFocused || value ? "#ffffff" : "#ffffff70"
-                    }
-                  />
-                }
+                value={value}
+                disabled={isLoading}
+                onChangeText={(e) => {
+                  onChange(e);
+                  setValue("telephone", phoneMask(e));
+                }}
+                isInvalid={!!errors.telephone}
+                styles={{
+                  container: { flex: 1 },
+                }}
+                errorMessage={String(errors.telephone?.message)}
                 left={
                   <TextInput.Icon
-                    icon="lock"
+                    icon="phone"
                     color={(isTextInputFocused) =>
                       isTextInputFocused || value ? "#ffffff" : "#ffffff70"
                     }
                   />
                 }
+                placeholder="Telefone"
+                keyboardType="numeric"
               />
             )}
           />
-
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => router.push("/forgotPassword")}
-          >
-            <GilroyText style={styles.forgotPasswordText}>
-              Esqueceu sua senha?
-            </GilroyText>
-          </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
-          // onPress={handleSubmit(onSubmit)}
-          onPress={() => router.push("/activeLocale")}
+          onPress={handleSubmit((e) => onSubmit(e))}
           style={styles.button}
+          loading={isLoading}
         >
-          <GilroyText style={styles.buttonText}>Entrar</GilroyText>
+          <GilroyText style={styles.buttonText}>Enviar código</GilroyText>
         </Button>
 
         <View style={styles.signUpContainer}>
           <GilroyText>Não possui uma conta?</GilroyText>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => router.push("/signIn")}
+            onPress={() => router.replace("/signIn")}
           >
             <GilroyText style={styles.signUpText}>
               Crie uma nova aqui!
@@ -147,18 +167,11 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 16,
   },
-  passwordContainer: {
-    flexDirection: "column",
-    gap: 12,
-  },
-  forgotPasswordText: {
-    color: "#00BFFF", // sky blue color
-    textDecorationLine: "underline",
-  },
   buttonContainer: {
     flexDirection: "column",
     width: "100%",
     alignItems: "center",
+    zIndex: -1,
   },
   button: {
     width: "100%",
@@ -175,5 +188,11 @@ const styles = StyleSheet.create({
   signUpText: {
     color: "#00BFFF",
     textDecorationLine: "underline",
+  },
+  selectContainer: {
+    flexDirection: "row",
+    width: "100%",
+    zIndex: 999,
+    gap: 16,
   },
 });

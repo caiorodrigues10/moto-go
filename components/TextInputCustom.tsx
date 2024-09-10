@@ -25,30 +25,15 @@ export function TextInputCustom({
   return (
     <View style={[styles.container, stylesSheet.container]}>
       <TextInput
-        contentStyle={{
-          fontFamily: "Gilroy",
-          backgroundColor: "transparent",
-        }}
         mode="outlined"
         textColor="white"
         placeholderTextColor="#ffffff70"
         value={value}
-        style={[
-          styles.input,
-          stylesSheet.input,
-          value ? { borderColor: "white" } : {},
-        ]}
-        left={
-          <TextInput.Icon
-            icon="email"
-            color={(isTextInputFocused) =>
-              isTextInputFocused || value ? "#ffffff" : "#ffffff70"
-            }
-          />
-        }
+        style={[styles.input, stylesSheet.input, style]}
         activeOutlineColor="transparent"
         outlineColor="transparent"
         selectionColor="white"
+        multiline={false} // Garante que o texto não quebra linhas
         {...props}
       />
       <GilroyText style={[stylesSheet.errorMessage, styles.errorMessage]}>
@@ -71,6 +56,10 @@ const stylesSheet = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     backgroundColor: "transparent",
+    height: 48, // Altura fixa para o input
+    textAlignVertical: "center",
+    // O estilo para esconder o texto que ultrapassa o limite
+    overflow: "hidden",
   },
   errorMessage: {
     color: "#F87171",

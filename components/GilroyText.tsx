@@ -3,7 +3,7 @@ import { Text, TextProps, StyleSheet } from "react-native";
 
 interface GilroyTextProps extends TextProps {
   weight?: "bold" | "light" | "medium";
-  style?: object; // Certifique-se de que o estilo é um objeto
+  style?: object;
 }
 
 export function GilroyText(props: GilroyTextProps) {
@@ -20,10 +20,7 @@ export function GilroyText(props: GilroyTextProps) {
   }
 
   return (
-    <Text
-      {...otherProps}
-      style={[styles.textWhite, style, { fontFamily }]} // Combina os estilos corretamente
-    />
+    <Text {...otherProps} style={[styles.textWhite, style, { fontFamily }]} />
   );
 }
 

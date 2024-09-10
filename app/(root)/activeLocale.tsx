@@ -27,7 +27,7 @@ export default function ActiveLocale() {
       <Button
         mode="contained"
         style={styles.button}
-        onPress={() => router.push("/map")}
+        onPress={() => router.replace("/map")}
       >
         <GilroyText style={styles.buttonText}>Habilitar</GilroyText>
       </Button>

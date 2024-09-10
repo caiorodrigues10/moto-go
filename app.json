@@ -12,6 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#1C2129"
     },
+    "constants": {
+      "URL_API": "http://localhost:3333"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],

@@ -21,14 +21,10 @@ export default function Map() {
   const [route, setRoute] = useState<Coordinate[]>([]);
 
   const fetchRoute = async (origin: Coordinate) => {
-    console.log({ origin });
-
     try {
       const response = await axios.get(
         `https://router.project-osrm.org/route/v1/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}?geometries=geojson`
       );
-      console.log({ response }, "012030120301203120301203012");
-
       const coordinates: Coordinate[] =
         response.data.routes[0].geometry.coordinates.map(
           ([longitude, latitude]: [number, number]) => ({ latitude, longitude })
@@ -64,8 +60,6 @@ export default function Map() {
             Math.abs(currentLocation.longitude - newLocation.longitude) > 0.0001
           ) {
             setCurrentLocation(newLocation);
-            console.log({ newLocation });
-
             fetchRoute(newLocation);
           }
         }

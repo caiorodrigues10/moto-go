@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     gap: 4,
+    marginTop: 12,
   },
   button: {
     marginBottom: 10,

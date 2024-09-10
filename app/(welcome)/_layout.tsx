@@ -10,7 +10,7 @@ const Moto = require("../../assets/images/moto.png");
 const City = require("../../assets/images/city.png");
 const Locale = require("../../assets/images/locale.png");
 
-export default function WelcomeLayout() {
+export default function Welcome() {
   const [step, setStep] = useState(0);
 
   return (
@@ -28,7 +28,7 @@ export default function WelcomeLayout() {
         <Button
           mode="text"
           textColor="#FFE924"
-          onPress={() => router.push("/auth")}
+          onPress={() => router.replace("/auth")}
         >
           Pular
         </Button>
@@ -94,7 +94,7 @@ export default function WelcomeLayout() {
           activeOpacity={0.8}
           onPress={() => {
             if (step === 2) {
-              router.push("/auth");
+              router.replace("/auth");
             } else {
               setStep((prev) => prev + 1);
             }
