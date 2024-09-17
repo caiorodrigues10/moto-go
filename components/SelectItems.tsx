@@ -106,7 +106,7 @@ const styleSheet = StyleSheet.create({
     borderColor: "#ffffff40",
     borderWidth: 1,
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

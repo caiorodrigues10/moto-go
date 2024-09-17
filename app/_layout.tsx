@@ -55,7 +55,6 @@ function RootLayoutNav() {
 
       if (token) {
         router.replace("/(root)/teste");
-        console.log(token);
       } else {
         router.replace("/(welcome)");
       }

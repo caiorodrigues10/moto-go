@@ -1,5 +1,5 @@
-import { ILogin, ILoginResponse } from "./types";
 import api from "@/services/api";
+import { ILogin, ILoginResponse } from "./types";
 
 export async function login(data: ILogin): Promise<ILoginResponse> {
   const response = await fetch(`${api}/users/session`, {

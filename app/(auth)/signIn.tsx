@@ -36,7 +36,6 @@ export default function Login() {
 
   const onSubmit = useCallback(
     async (data: SignInProps) => {
-      console.log(data);
       const response = await createUser(data);
 
       if (response.result === "success") {

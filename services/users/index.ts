@@ -131,8 +131,6 @@ export async function validatePin(
     .then((res) => res.json())
     .catch((err) => err.response)) as IValidatePinResponse;
 
-  console.log(response);
-
   try {
     await AsyncStorage.setItem("token", response?.data?.token || "");
   } catch (e: any) {

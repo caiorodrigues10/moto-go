@@ -8,7 +8,9 @@ import { Button, TextInput } from "react-native-paper";
 import { SelectPoints } from "@/components/SelectPoints";
 import { useAppContext } from "@/context/AppContext";
 import { Coordinate } from "@/services/Coordinate";
-import ConfirmService from "./ConfirmService";
+import ConfirmService from "./confirmService";
+import SelectTypeService from "./selectTypeService";
+import { SelectDriver } from "./selectDriver";
 
 const locationIcon = require("../../../assets/images/location-icon.png");
 // const motoIcon = require("../../../assets/images/moto-icon.png");
@@ -21,7 +23,13 @@ export default function MapTeste() {
     destination,
     initial,
     setInitial,
+    setDestination,
     route,
+    setRoute,
+    setVisibleModalConfirmService,
+    setQueryFinal,
+    setQueryInitial,
+    isOpenSelectDriver,
   } = useAppContext();
   const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
     null
@@ -159,31 +167,10 @@ export default function MapTeste() {
           <Polyline coordinates={route} strokeColor="hotpink" strokeWidth={3} />
         )}
       </MapView>
-      <View style={styles.dialogContainer}>
-        <View style={styles.dialog}>
-          <GilroyText style={styles.label}>Escolha um serviço</GilroyText>
-          <View style={styles.contentButtons}>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#FFE924"
-              onPress={() => setFocusSearch(true)}
-              style={{ width: "48%" }}
-            >
-              <GilroyText style={{ color: "#000" }}>Entrega</GilroyText>
-            </Button>
-            <Button
-              mode="contained-tonal"
-              buttonColor="#FFE924"
-              onPress={() => setFocusSearch(true)}
-              style={{ width: "50%" }}
-            >
-              <GilroyText style={{ color: "#000" }}>Transporte</GilroyText>
-            </Button>
-          </View>
-        </View>
-      </View>
+      <SelectTypeService currentLocation={currentLocation} />
       {focusSearch && <SelectPoints />}
-      <ConfirmService />
+      <ConfirmService currentLocation={currentLocation} />
+      {isOpenSelectDriver && <SelectDriver />}
     </View>
   );
 }

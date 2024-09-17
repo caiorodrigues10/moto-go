@@ -94,7 +94,6 @@ export function SelectPoints() {
 
         setValue(suggestions);
       } else {
-        console.log("Nenhum resultado encontrado");
         setValue([]);
       }
     } catch (error) {
@@ -235,7 +234,7 @@ export function SelectPoints() {
             <Button
               mode="outlined"
               style={styles.outlinedButton}
-              loading={isLoading}
+              disabled={isLoading}
               onPress={() => setFocusSearch(false)}
               textColor="#FFE924"
             >

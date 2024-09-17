@@ -64,7 +64,7 @@ export default function ValidatePin() {
 
   return (
     <BodyPage style={styles.bodyPage}>
-      <GilroyText style={styles.title}>Entrar</GilroyText>
+      <GilroyText style={styles.title}>Confirmação de SMS</GilroyText>
       <View style={styles.formContainer}>
         <Controller
           name="code"

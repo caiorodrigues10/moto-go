@@ -1,4 +1,6 @@
 import { Coordinate } from "@/services/Coordinate";
+import { IDriver } from "@/services/drivers/types";
+import { ITypeService } from "@/services/service/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export interface AppContextData {
@@ -18,6 +20,12 @@ export interface AppContextData {
   setQueryFinal: (value: string) => void;
   visibleModalConfirmService: boolean;
   setVisibleModalConfirmService: (value: boolean) => void;
+  isOpenSelectDriver: boolean;
+  setIsOpenSelectDriver: (value: boolean) => void;
+  driver: IDriver;
+  setDriver: (value: IDriver) => void;
+  typeService: ITypeService;
+  setTypeService: (value: ITypeService) => void;
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -35,7 +43,10 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [queryInitial, setQueryInitial] = useState("");
   const [queryFinal, setQueryFinal] = useState("");
   const [visibleModalConfirmService, setVisibleModalConfirmService] =
-    useState(true);
+    useState(false);
+  const [isOpenSelectDriver, setIsOpenSelectDriver] = useState(true);
+  const [driver, setDriver] = useState({} as IDriver);
+  const [typeService, setTypeService] = useState({} as ITypeService);
 
   return (
     <AppContext.Provider
@@ -56,6 +67,12 @@ const AppProvider = ({ children }: AppProviderProps) => {
         setQueryInitial,
         setVisibleModalConfirmService,
         visibleModalConfirmService,
+        isOpenSelectDriver,
+        setIsOpenSelectDriver,
+        driver,
+        setDriver,
+        typeService,
+        setTypeService,
       }}
     >
       {children}
