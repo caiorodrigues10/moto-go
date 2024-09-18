@@ -26,6 +26,8 @@ export interface AppContextData {
   setDriver: (value: IDriver) => void;
   typeService: ITypeService;
   setTypeService: (value: ITypeService) => void;
+  isOpenSelectTypeServiceModal: boolean;
+  setIsOpenSelectTypeServiceModal: (value: boolean) => void;
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -47,6 +49,8 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [isOpenSelectDriver, setIsOpenSelectDriver] = useState(true);
   const [driver, setDriver] = useState({} as IDriver);
   const [typeService, setTypeService] = useState({} as ITypeService);
+  const [isOpenSelectTypeServiceModal, setIsOpenSelectTypeServiceModal] =
+    useState(false);
 
   return (
     <AppContext.Provider
@@ -73,6 +77,8 @@ const AppProvider = ({ children }: AppProviderProps) => {
         setDriver,
         typeService,
         setTypeService,
+        isOpenSelectTypeServiceModal,
+        setIsOpenSelectTypeServiceModal,
       }}
     >
       {children}

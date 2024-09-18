@@ -47,7 +47,7 @@ export default function SelectTypeService({
     setVisibleModalConfirmService(false);
   }, [currentLocation]);
 
-  const fetchDrivers = useCallback(
+  const fetchTypeService = useCallback(
     async (page: number) => {
       if (page === 1) setIsLoading(true);
       setIsLoadingMore(page > 1);
@@ -80,7 +80,7 @@ export default function SelectTypeService({
   );
 
   useEffect(() => {
-    fetchDrivers(page);
+    fetchTypeService(page);
   }, [page]);
 
   const loadMoreDrivers = () => {
@@ -88,6 +88,7 @@ export default function SelectTypeService({
       setPage((prevPage) => prevPage + 1);
     }
   };
+  1;
 
   return (
     <>
@@ -103,7 +104,10 @@ export default function SelectTypeService({
                   key={e.id}
                   mode="contained-tonal"
                   buttonColor="#FFE924"
-                  onPress={() => setFocusSearch(true)}
+                  onPress={() => {
+                    setFocusSearch(true);
+                    setTypeService(e);
+                  }}
                   style={{ width: "48%" }}
                 >
                   <GilroyText style={{ color: "#000" }}>
