@@ -42,7 +42,6 @@ export default function Login() {
   });
 
   const handleSelect = (option: { label: string; value: string }) => {
-    console.log("Selected option:", option);
     setCodePhone(option.value);
   };
 
@@ -155,8 +154,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "column",
-    paddingTop: 24,
-    gap: 24,
+    paddingTop: 0,
+    gap: 16,
   },
   title: {
     textAlign: "center",
@@ -166,6 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     gap: 16,
+    marginTop: 32,
   },
   buttonContainer: {
     flexDirection: "column",
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   signUpContainer: {
-    marginTop: 12,
+    marginTop: 16,
     flexDirection: "row",
     gap: 4,
   },

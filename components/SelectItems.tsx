@@ -20,6 +20,7 @@ interface Option {
 
 interface SelectProps {
   options: Option[];
+  disabled?: boolean;
   placeholder: string;
   onSelect: (option: Option) => void;
   defaultValue?: string;
@@ -38,6 +39,7 @@ export const SelectItems: React.FC<SelectProps> = ({
   onSelect,
   defaultValue,
   styles,
+  disabled = false,
 }) => {
   const [selectedValue, setSelectedValue] = useState<Option | null>(
     options?.find((e) => e.value === defaultValue) || null
@@ -56,7 +58,7 @@ export const SelectItems: React.FC<SelectProps> = ({
     <View style={[styles?.styleContent, styleSheet.container]}>
       <Pressable
         ref={ref}
-        onPress={() => setShowOptions(!showOptions)}
+        onPress={() => !disabled && setShowOptions(!showOptions)}
         style={[styles?.styleInput, styleSheet.input]}
       >
         <GilroyText style={[styles?.stylePlaceholder, styleSheet.placeholder]}>

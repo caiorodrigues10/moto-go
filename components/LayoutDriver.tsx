@@ -2,25 +2,25 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import MapTeste from "./pages/map";
+import RacesByDriver from "./pages/driver/races/racesByDriver";
 import { Profile } from "./pages/profile";
-import AddressList from "@/app/(root)/address";
+import AcceptedRacesHistory from "./pages/driver/races/historyRace";
 
 const Tab = createBottomTabNavigator();
 
 function MapScreen() {
-  return <MapTeste />;
+  return <RacesByDriver />;
 }
 
 function LocationsScreen() {
-  return <AddressList />;
+  return <AcceptedRacesHistory />;
 }
 
 function ProfileScreen() {
   return <Profile />;
 }
 
-export default function App() {
+export function DriverLayout() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -29,8 +29,8 @@ export default function App() {
           const iconName =
             route.name === "Corridas"
               ? "map"
-              : route.name === "Endereços"
-              ? "map-marker"
+              : route.name === "Minhas corridas"
+              ? "history"
               : route.name === "Meu perfil"
               ? "user"
               : "question";
@@ -45,7 +45,7 @@ export default function App() {
       })}
     >
       <Tab.Screen name="Corridas" component={MapScreen} />
-      <Tab.Screen name="Endereços" component={LocationsScreen} />
+      <Tab.Screen name="Minhas corridas" component={LocationsScreen} />
       <Tab.Screen name="Meu perfil" component={ProfileScreen} />
     </Tab.Navigator>
   );

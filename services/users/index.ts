@@ -131,11 +131,21 @@ export async function validatePin(
     .then((res) => res.json())
     .catch((err) => err.response)) as IValidatePinResponse;
 
-  try {
-    await AsyncStorage.setItem("token", response?.data?.token || "");
-  } catch (e: any) {
-    return e.response;
-  }
+  return response;
+}
+
+export async function driverValidatePin(
+  data: IValidatePin
+): Promise<IValidatePinResponse> {
+  const response = (await fetch(`${api}/drivers/validateDriver`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response)) as IValidatePinResponse;
 
   return response;
 }

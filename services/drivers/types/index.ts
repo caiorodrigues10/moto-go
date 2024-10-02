@@ -25,4 +25,31 @@ interface IDriverById extends AppResponse {
   data?: IDriver;
 }
 
-export type { IDriverResponse, IDriverById, IDriver };
+interface IUpdateDriver {
+  name?: string;
+  profilePicture?: string;
+}
+
+interface IValidateCodeDriverResponse extends AppResponse {
+  data?: {
+    token: string;
+    driver: {
+      name: string;
+      id: number;
+      telephone: string;
+    };
+  };
+}
+
+interface IDriverByIdResponse extends AppResponse {
+  data?: IDriver;
+}
+
+export type {
+  IDriverResponse,
+  IDriverById,
+  IDriver,
+  IUpdateDriver,
+  IValidateCodeDriverResponse,
+  IDriverByIdResponse,
+};

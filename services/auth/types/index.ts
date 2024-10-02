@@ -1,5 +1,10 @@
 import { AppResponse } from "@/services/AppResponse";
 
+interface IUserLogin {
+  id: number;
+  name: string;
+  telephone: string;
+}
 interface ILogin {
   telephone: string;
 }
@@ -7,12 +12,8 @@ interface ILogin {
 interface ILoginResponse extends AppResponse {
   data?: {
     token: string;
-    user: {
-      id: number;
-      name: string;
-      email: string;
-    };
+    user: IUserLogin;
   };
 }
 
-export type { ILogin, ILoginResponse };
+export type { ILogin, ILoginResponse, IUserLogin };

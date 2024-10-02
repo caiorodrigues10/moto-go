@@ -45,7 +45,11 @@ interface IValidatePin {
 interface IValidatePinResponse extends AppResponse {
   data?: {
     token: string;
-    id: string;
+    user: {
+      id: number;
+      name: string;
+      telephone: string;
+    };
   };
 }
 

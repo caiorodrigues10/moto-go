@@ -1,5 +1,5 @@
 import { AppProvider } from "@/context/AppContext";
-import { getToken } from "@/providers/getToken";
+import { getValueLocal } from "@/providers/getValueLocal";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
@@ -51,10 +51,11 @@ function RootLayoutNav() {
 
   async function checkTokenAndRedirect() {
     try {
-      const token = await getToken();
+      const token = await getValueLocal("token");
 
       if (token) {
-        router.replace("/(root)/teste");
+        // router.replace("/(root)/teste");
+        router.replace("/(rootDriver)/races");
       } else {
         router.replace("/(welcome)");
       }
@@ -106,6 +107,10 @@ function RootLayoutNav() {
                 />
                 <Stack.Screen
                   name="(root)/teste"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(rootDriver)/races"
                   options={{ headerShown: false }}
                 />
               </Stack>

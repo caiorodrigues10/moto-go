@@ -3,7 +3,7 @@ import { TextInputCustom } from "@/components/TextInputCustom";
 import { BodyPage, View } from "@/components/Themed";
 import { useAppContext } from "@/context/AppContext";
 import { setUserLocal } from "@/providers/setValueLocal";
-import { validatePin } from "@/services/users";
+import { validateCodeDriver } from "@/services/drivers";
 import { IValidatePin } from "@/services/users/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
@@ -44,18 +44,18 @@ export default function ValidatePin() {
         code: Number(data.code),
       } as IValidatePin;
 
-      const response = await validatePin(newData);
+      const response = await validateCodeDriver(newData);
 
       if (response?.data && response.result === "success") {
         toast.show(response.message, {
           type: "success",
           placement: "top",
         });
-        router.push("/(root)/activeLocale");
+        router.push("/(rootDriver)/races");
         setUserLocal({
           token: response.data.token,
-          user: response.data.user,
-          typeUser: "user",
+          user: response.data.driver,
+          typeUser: "driver",
         });
       } else {
         toast.show(response.message, {
