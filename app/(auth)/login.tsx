@@ -194,5 +194,6 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 999,
     gap: 16,
+    alignItems: "center",
   },
 });

@@ -70,9 +70,7 @@ export function SelectDriver() {
     <View style={styles.overlaySearch}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <GilroyText style={styles.title} weight="bold">
-          Escolha um motorista
-        </GilroyText>
+        <GilroyText style={styles.title}>Escolha um motorista</GilroyText>
         {isLoading ? (
           <View style={styles.loadingContainer}>
             <LottieView
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1C2129",
   },
   container: {
-    marginTop: 100,
+    marginTop: 90,
     paddingHorizontal: 16,
     justifyContent: "space-between",
     height: "85%",
@@ -217,8 +215,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    color: "#ffffff",
+    marginBottom: 24,
     textAlign: "center",
-    paddingBottom: 24,
   },
   contentDataUser: {
     display: "flex",

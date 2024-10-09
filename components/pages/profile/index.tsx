@@ -26,8 +26,6 @@ export function Profile() {
   const [telephone, setTelephone] = useState<string | null>();
   const [typeUser, setTypeUser] = useState<string | null>();
 
-  console.log(name);
-
   useFocusEffect(
     useCallback(() => {
       const getLocal = async () => {

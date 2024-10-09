@@ -1,7 +1,10 @@
+import { getValueLocal } from "@/providers/getValueLocal";
 import {
   IChangeUserPassword,
   ICreateUser,
+  ICreateUserAddress,
   ICreateUserResponse,
+  IResponseIUserAddress,
   IUpdateUser,
   IUpdateUserResponse,
   IValidatePin,
@@ -15,11 +18,7 @@ export async function updateUser(
   data: IUpdateUser,
   id: number
 ): Promise<IUpdateUserResponse> {
-  let token;
-
-  AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/users/${id}`, {
     method: "PUT",
@@ -38,37 +37,12 @@ export async function updateUser(
 export async function createUser(
   data: ICreateUser
 ): Promise<ICreateUserResponse> {
-  // let token;
-  // AsyncStorage.getItem("token").then((res) => {
-  //   token = res;
-  // });
-
   const response = await fetch(`${api}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => err.response);
-
-  return response;
-}
-
-export async function inactiveUser(id: number): Promise<AppResponse> {
-  let token;
-
-  AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
-
-  const response = await fetch(`${api}/users/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   })
     .then((res) => res.json())
     .catch((err) => err.response);
@@ -79,11 +53,7 @@ export async function inactiveUser(id: number): Promise<AppResponse> {
 export async function recoveryPassword(data: {
   email: string;
 }): Promise<AppResponse> {
-  let token;
-
-  AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/users/forgotPassword`, {
     method: "POST",
@@ -146,6 +116,92 @@ export async function driverValidatePin(
   })
     .then((res) => res.json())
     .catch((err) => err.response)) as IValidatePinResponse;
+
+  return response;
+}
+
+export async function createUserAddress(
+  data: ICreateUserAddress
+): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/userAddress`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}
+
+export async function updateUserAddress(
+  data: ICreateUserAddress,
+  id: number
+): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/userAddress/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}
+
+export async function getUserAddress({
+  page,
+  limit,
+}: {
+  page?: number;
+  limit?: number;
+}): Promise<IResponseIUserAddress> {
+  const token = await getValueLocal("token");
+
+  const pageQuery = page ? "page=" + (page - 1) : "";
+  const limitQuery = limit ? "limit=" + limit : "";
+
+  const response = await fetch(
+    `${api}/userAddress?${pageQuery}&${limitQuery}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}
+
+export async function deleteUserAddress({
+  id,
+}: {
+  id: number;
+}): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/userAddress/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
 
   return response;
 }

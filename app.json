@@ -23,7 +23,8 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need your location to show your position on the map",
         "NSLocationAlwaysUsageDescription": "We need your location to show your position on the map"
-      }
+      },
+      "bundleIdentifier": "com.caiorodriguesdoido.motogo"
     },
     "android": {
       "adaptiveIcon": {
@@ -68,5 +69,4 @@
     },
     "owner": "caiorodriguesdoido"
   }
-  
 }

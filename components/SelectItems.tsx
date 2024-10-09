@@ -1,13 +1,12 @@
-import React, { ReactNode, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   FlatList,
   Pressable,
+  StyleSheet,
   TouchableOpacity,
   View,
-  StyleSheet,
-  Platform,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { useClickOutside } from "react-native-click-outside";
 import { GilroyText } from "./GilroyText";
 
@@ -30,7 +29,11 @@ interface SelectProps {
     styleItem?: object;
     stylePlaceholder?: object;
     styleInput?: object;
+    errorMessage?: object;
   };
+  isInvalid?: boolean;
+  errorMessage?: string;
+  value?: string;
 }
 
 export const SelectItems: React.FC<SelectProps> = ({
@@ -40,10 +43,14 @@ export const SelectItems: React.FC<SelectProps> = ({
   defaultValue,
   styles,
   disabled = false,
+  isInvalid,
+  errorMessage,
+  value,
 }) => {
   const [selectedValue, setSelectedValue] = useState<Option | null>(
     options?.find((e) => e.value === defaultValue) || null
   );
+
   const [showOptions, setShowOptions] = useState(false);
 
   const ref = useClickOutside<View>(() => showOptions && setShowOptions(false));
@@ -54,6 +61,12 @@ export const SelectItems: React.FC<SelectProps> = ({
     onSelect(option);
   };
 
+  useEffect(() => {
+    if (value) {
+      handleSelect(options?.find((e) => e.value === value) || ({} as Option));
+    }
+  }, [value, options]);
+
   return (
     <View style={[styles?.styleContent, styleSheet.container]}>
       <Pressable
@@ -61,7 +74,12 @@ export const SelectItems: React.FC<SelectProps> = ({
         onPress={() => !disabled && setShowOptions(!showOptions)}
         style={[styles?.styleInput, styleSheet.input]}
       >
-        <GilroyText style={[styles?.stylePlaceholder, styleSheet.placeholder]}>
+        <GilroyText
+          style={[
+            styles?.stylePlaceholder,
+            !selectedValue ? styleSheet.placeholder : styleSheet.itemSelected,
+          ]}
+        >
           {selectedValue
             ? selectedValue?.showValue || selectedValue.label
             : placeholder}
@@ -72,6 +90,9 @@ export const SelectItems: React.FC<SelectProps> = ({
           color="gray"
         />
       </Pressable>
+      <GilroyText style={[styleSheet.errorMessage, styles?.errorMessage]}>
+        {isInvalid && errorMessage && errorMessage}
+      </GilroyText>
       {showOptions && (
         <FlatList
           data={options}
@@ -87,7 +108,7 @@ export const SelectItems: React.FC<SelectProps> = ({
               onPress={() => handleSelect(item)}
             >
               {typeof item?.icon === "string" ? (
-                <GilroyText>{item?.icon}</GilroyText>
+                <GilroyText style={{ color: "white" }}>{item?.icon}</GilroyText>
               ) : (
                 item?.icon
               )}
@@ -102,20 +123,26 @@ export const SelectItems: React.FC<SelectProps> = ({
 
 const styleSheet = StyleSheet.create({
   container: {
-    zIndex: 999, // Certifique-se de que o contêiner pai tenha um zIndex alto
+    zIndex: 999,
+    gap: 4,
   },
   input: {
     borderColor: "#ffffff40",
     borderWidth: 1,
     borderRadius: 12,
-    padding: 12,
+    padding: 14,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   placeholder: {
     color: "white",
-    opacity: 0.7,
+    opacity: 0.5,
+    fontSize: 16,
+  },
+  itemSelected: {
+    color: "white",
+    fontSize: 16,
   },
   list: {
     borderColor: "gray",
@@ -126,7 +153,7 @@ const styleSheet = StyleSheet.create({
     position: "absolute",
     top: 40,
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#2a3240",
     zIndex: 1000,
   },
   item: {
@@ -137,6 +164,10 @@ const styleSheet = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
-    color: "gray",
+    color: "white",
+  },
+  errorMessage: {
+    color: "#F87171",
+    height: 14,
   },
 });

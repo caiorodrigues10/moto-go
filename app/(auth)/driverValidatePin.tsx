@@ -95,6 +95,7 @@ export default function ValidatePin() {
           onPress={handleSubmit((e) => onSubmit(e))}
           style={styles.button}
           loading={isLoading}
+          textColor="#000000"
         >
           <GilroyText style={styles.buttonText}>Validar código</GilroyText>
         </Button>

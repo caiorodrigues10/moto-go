@@ -1,4 +1,5 @@
 import { AppProvider } from "@/context/AppContext";
+import { AppDriverProvider } from "@/context/AppDriverContext";
 import { getValueLocal } from "@/providers/getValueLocal";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
@@ -20,11 +21,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Gilroy: require("../assets/fonts/Gilroy-Regular.ttf"),
-    ...FontAwesome.font,
     GilroyBold: require("../assets/fonts/Gilroy-Bold.ttf"),
-    ...FontAwesome.font,
     GilroyLight: require("../assets/fonts/Gilroy-Light.ttf"),
-    ...FontAwesome.font,
     GilroyMedium: require("../assets/fonts/Gilroy-Medium.ttf"),
     ...FontAwesome.font,
   });
@@ -52,10 +50,14 @@ function RootLayoutNav() {
   async function checkTokenAndRedirect() {
     try {
       const token = await getValueLocal("token");
+      const typeUser = await getValueLocal("typeUser");
 
       if (token) {
-        // router.replace("/(root)/teste");
-        router.replace("/(rootDriver)/races");
+        if (typeUser === "driver") {
+          router.replace("/(rootDriver)/races");
+        } else {
+          router.replace("/(root)/teste");
+        }
       } else {
         router.replace("/(welcome)");
       }
@@ -70,54 +72,56 @@ function RootLayoutNav() {
 
   return (
     <ToastProvider>
-      <AppProvider>
-        <PaperProvider>
-          <ClickOutsideProvider>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack
-                initialRouteName="(auth)/login"
-                screenOptions={{
-                  headerTintColor: "white",
-                  headerTitle: "",
-                  headerStyle: {
-                    backgroundColor: "#1C2129",
-                  },
-                  headerBackTitle: "Voltar",
-                }}
+      <AppDriverProvider>
+        <AppProvider>
+          <PaperProvider>
+            <ClickOutsideProvider>
+              <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
               >
-                <Stack.Screen name="(auth)/login" />
-                <Stack.Screen name="(auth)/signIn" />
-                <Stack.Screen
-                  name="(welcome)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(auth)/auth"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  options={{ headerShown: false }}
-                  name="(root)/activeLocale"
-                />
-                <Stack.Screen
-                  name="(root)/map"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(root)/teste"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(rootDriver)/races"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </ClickOutsideProvider>
-        </PaperProvider>
-      </AppProvider>
+                <Stack
+                  initialRouteName="(auth)/login"
+                  screenOptions={{
+                    headerTintColor: "white",
+                    headerTitle: "",
+                    headerStyle: {
+                      backgroundColor: "#1C2129",
+                    },
+                    headerBackTitle: "Voltar",
+                  }}
+                >
+                  <Stack.Screen name="(auth)/login" />
+                  <Stack.Screen name="(auth)/signIn" />
+                  <Stack.Screen
+                    name="(welcome)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(auth)/auth"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    options={{ headerShown: false }}
+                    name="(root)/activeLocale"
+                  />
+                  <Stack.Screen
+                    name="(root)/map"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(root)/teste"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(rootDriver)/races"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+              </ThemeProvider>
+            </ClickOutsideProvider>
+          </PaperProvider>
+        </AppProvider>
+      </AppDriverProvider>
     </ToastProvider>
   );
 }

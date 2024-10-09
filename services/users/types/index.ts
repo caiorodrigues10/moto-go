@@ -53,6 +53,38 @@ interface IValidatePinResponse extends AppResponse {
   };
 }
 
+interface ICreateUserAddress {
+  name: string;
+  zipcode: string;
+  address: string;
+  district: string;
+  address_number: number;
+  city: string;
+  state: string;
+  complement: string | null;
+}
+
+interface IUserAddress {
+  id: number;
+  user_id: number;
+  name: string;
+  zipcode: string;
+  address: string;
+  district: string;
+  address_number: number;
+  city: string;
+  state: string;
+  active: boolean;
+  complement: string | null;
+}
+
+interface IResponseIUserAddress extends AppResponse {
+  data?: {
+    count: number;
+    list: IUserAddress[];
+  };
+}
+
 export type {
   IUser,
   ICreateUser,
@@ -63,4 +95,7 @@ export type {
   IChangeUserPassword,
   IValidatePin,
   IValidatePinResponse,
+  ICreateUserAddress,
+  IUserAddress,
+  IResponseIUserAddress,
 };

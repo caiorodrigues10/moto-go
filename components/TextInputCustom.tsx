@@ -30,10 +30,11 @@ export function TextInputCustom({
         placeholderTextColor="#ffffff70"
         value={value}
         style={[styles.input, stylesSheet.input, style]}
+        contentStyle={{ fontFamily: "Gilroy" }}
         activeOutlineColor="transparent"
         outlineColor="transparent"
         selectionColor="white"
-        multiline={false} // Garante que o texto não quebra linhas
+        multiline={false}
         {...props}
       />
       <GilroyText style={[stylesSheet.errorMessage, styles.errorMessage]}>
@@ -56,9 +57,8 @@ const stylesSheet = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     backgroundColor: "transparent",
-    height: 48, // Altura fixa para o input
+    height: 48,
     textAlignVertical: "center",
-    // O estilo para esconder o texto que ultrapassa o limite
     overflow: "hidden",
   },
   errorMessage: {

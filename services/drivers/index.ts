@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IDriverByIdResponse,
   IDriverResponse,
@@ -9,6 +8,7 @@ import {
 import api from "@/services/api";
 import { AppResponse } from "../AppResponse";
 import { IValidatePin } from "../users/types";
+import { getValueLocal } from "@/providers/getValueLocal";
 
 export async function getDrivers({
   page,
@@ -17,11 +17,7 @@ export async function getDrivers({
   page?: number;
   limit?: number;
 }): Promise<IDriverResponse> {
-  let token;
-
-  await AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const pageQuery = page ? "page=" + (page - 1) : "";
   const limitQuery = limit ? "limit=" + limit : "";
@@ -40,11 +36,7 @@ export async function getDrivers({
 }
 
 export async function updateDriver(data: IUpdateDriver): Promise<AppResponse> {
-  let token;
-
-  await AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/drivers/profile`, {
     method: "PUT",
@@ -63,11 +55,7 @@ export async function updateDriver(data: IUpdateDriver): Promise<AppResponse> {
 export async function validateCodeDriver(
   data: IValidatePin
 ): Promise<IValidateCodeDriverResponse> {
-  let token;
-
-  await AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/drivers/validateDriver`, {
     method: "POST",
@@ -84,11 +72,7 @@ export async function validateCodeDriver(
 }
 
 export async function getDriverById(id: string): Promise<IDriverByIdResponse> {
-  let token;
-
-  await AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/drivers/${id}`, {
     method: "GET",
