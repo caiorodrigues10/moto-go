@@ -3,8 +3,8 @@ import { View } from "@/components/Themed";
 import { useAppContext } from "@/context/AppContext";
 import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
-import { getTypeServices } from "@/services/service";
-import { ITypeService } from "@/services/service/types";
+import { getServicesType } from "@/services/serviceType";
+import { IServiceType } from "@/services/serviceType/types";
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
@@ -19,7 +19,7 @@ export default function SelectTypeService({
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [typeServices, setTypeServices] = useState([] as ITypeService[]);
+  const [typeServices, setTypeServices] = useState([] as IServiceType[]);
 
   const {
     setTypeService,
@@ -38,7 +38,7 @@ export default function SelectTypeService({
 
   const clearService = useCallback(() => {
     setDriver({} as IDriver);
-    setTypeService({} as ITypeService);
+    setTypeService({} as IServiceType);
     setRoute([]);
     setQueryFinal("");
     setQueryInitial("");
@@ -51,7 +51,7 @@ export default function SelectTypeService({
     async (page: number) => {
       if (page === 1) setIsLoading(true);
       setIsLoadingMore(page > 1);
-      const response = await getTypeServices();
+      const response = await getServicesType();
 
       if (response.result === "success") {
         if (page === 1) {

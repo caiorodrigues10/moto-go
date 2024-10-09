@@ -22,7 +22,6 @@ export default function AddressList() {
   const [addressData, setAddressData] = useState({} as IUserAddress);
 
   const toast = useToast();
-  console.log(address[0]);
 
   const fetchAddress = useCallback(
     async (page: number) => {

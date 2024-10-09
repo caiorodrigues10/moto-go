@@ -10,6 +10,8 @@ import { useAppContext } from "@/context/AppContext";
 import { Coordinate } from "@/services/Coordinate";
 import { useToast } from "react-native-toast-notifications";
 import { StatusBar } from "expo-status-bar";
+import { getUserAddress } from "@/services/users";
+import { IUserAddress } from "@/services/users/types";
 
 interface IAddressComplete {
   formatted_address: string;
@@ -36,6 +38,8 @@ export function SelectPoints() {
   const [currentAddress, setCurrentAddress] = useState<IAddressComplete | null>(
     null
   );
+  const [address, setAddress] = useState([] as IUserAddress[]);
+
   const {
     setRoute,
     setFocusSearch,
@@ -180,6 +184,23 @@ export function SelectPoints() {
       console.error("Erro ao obter localização atual", error);
     }
   };
+
+  const fetchAddress = useCallback(async () => {
+    const response = await getUserAddress({ page: 0, limit: 1000 });
+
+    if (response.result === "success") {
+      setAddress(response.data?.list || []);
+    } else {
+      toast.show(response.message, {
+        type: "danger",
+        placement: "top",
+      });
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    fetchAddress();
+  }, []);
 
   return (
     <View style={styles.overlaySearch}>

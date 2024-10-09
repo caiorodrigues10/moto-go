@@ -46,7 +46,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [queryFinal, setQueryFinal] = useState("");
   const [visibleModalConfirmService, setVisibleModalConfirmService] =
     useState(false);
-  const [isOpenSelectDriver, setIsOpenSelectDriver] = useState(true);
+  const [isOpenSelectDriver, setIsOpenSelectDriver] = useState(false);
   const [driver, setDriver] = useState({} as IDriver);
   const [typeService, setTypeService] = useState({} as ITypeService);
   const [isOpenSelectTypeServiceModal, setIsOpenSelectTypeServiceModal] =

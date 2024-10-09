@@ -1,14 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import api from "@/services/api";
-import { ITypeServiceResponse } from "./types";
+import { IServiceTypeResponse } from "./types";
+import { getValueLocal } from "@/providers/getValueLocal";
 
-export async function getTypeServices(): Promise<ITypeServiceResponse> {
-  let token;
-
-  await AsyncStorage.getItem("token").then((res) => {
-    token = res;
-  });
+export async function getServicesType(): Promise<IServiceTypeResponse> {
+  const token = await getValueLocal("token");
 
   const response = await fetch(`${api}/serviceTypes`, {
     method: "GET",

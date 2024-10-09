@@ -1,13 +1,10 @@
 import { GilroyText } from "@/components/GilroyText";
 import { useAppContext } from "@/context/AppContext";
-import { Coordinate } from "@/services/Coordinate";
-import { IDriver } from "@/services/drivers/types";
-import { getTypeServices } from "@/services/service";
-import { ITypeService } from "@/services/service/types";
+import { getServicesType } from "@/services/serviceType";
+import { IServiceType } from "@/services/serviceType/types";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Image,
   Modal,
   StyleSheet,
   TouchableOpacity,
@@ -29,11 +26,11 @@ export default function SelectTypeServiceModal() {
     setIsOpenSelectTypeServiceModal,
   } = useAppContext();
 
-  const [typeServices, setTypeServices] = useState([] as ITypeService[]);
+  const [typeServices, setTypeServices] = useState([] as IServiceType[]);
 
   const fetchTypeService = useCallback(async () => {
     setIsLoading(true);
-    const response = await getTypeServices();
+    const response = await getServicesType();
 
     if (response.result === "success") {
       setTypeServices(response?.data || []);

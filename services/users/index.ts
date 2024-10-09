@@ -4,7 +4,7 @@ import {
   ICreateUser,
   ICreateUserAddress,
   ICreateUserResponse,
-  IResponseIUserAddress,
+  IResponseUserAddress,
   IUpdateUser,
   IUpdateUserResponse,
   IValidatePin,
@@ -165,7 +165,7 @@ export async function getUserAddress({
 }: {
   page?: number;
   limit?: number;
-}): Promise<IResponseIUserAddress> {
+}): Promise<IResponseUserAddress> {
   const token = await getValueLocal("token");
 
   const pageQuery = page ? "page=" + (page - 1) : "";

@@ -78,7 +78,7 @@ interface IUserAddress {
   complement: string | null;
 }
 
-interface IResponseIUserAddress extends AppResponse {
+interface IResponseUserAddress extends AppResponse {
   data?: {
     count: number;
     list: IUserAddress[];
@@ -97,5 +97,5 @@ export type {
   IValidatePinResponse,
   ICreateUserAddress,
   IUserAddress,
-  IResponseIUserAddress,
+  IResponseUserAddress,
 };

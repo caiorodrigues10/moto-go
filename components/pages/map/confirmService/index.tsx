@@ -2,7 +2,7 @@ import { GilroyText } from "@/components/GilroyText";
 import { useAppContext } from "@/context/AppContext";
 import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
-import { ITypeService } from "@/services/service/types";
+import { IServiceType } from "@/services/serviceType/types";
 import { StatusBar } from "expo-status-bar";
 import { useCallback } from "react";
 import {
@@ -44,7 +44,7 @@ export default function ConfirmService({
 
   const clearService = useCallback(() => {
     setDriver({} as IDriver);
-    setTypeService({} as ITypeService);
+    setTypeService({} as IServiceType);
     setRoute([]);
     setQueryFinal("");
     setQueryInitial("");
@@ -289,7 +289,7 @@ export default function ConfirmService({
           buttonColor="#FFE924"
           style={{ marginBottom: 24 }}
         >
-          <GilroyText style={{ color: "#000" }}>Iniciar viagem</GilroyText>
+          <GilroyText style={{ color: "#000" }}>Iniciar serviço</GilroyText>
         </Button>
       </View>
       {isOpenSelectTypeServiceModal && <SelectTypeServiceModal />}
