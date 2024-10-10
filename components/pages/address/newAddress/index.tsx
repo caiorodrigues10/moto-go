@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
@@ -98,7 +98,7 @@ export function NewAddress({
       <View style={styles.container}>
         <GilroyText style={styles.title}>Novo endereço</GilroyText>
 
-        <View style={styles.formContainer}>
+        <ScrollView style={styles.formContainer}>
           <Controller
             name="name"
             control={control}
@@ -254,7 +254,7 @@ export function NewAddress({
               />
             )}
           />
-        </View>
+        </ScrollView>
 
         <Button
           mode="contained"

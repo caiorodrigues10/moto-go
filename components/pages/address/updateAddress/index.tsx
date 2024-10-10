@@ -16,7 +16,7 @@ import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
@@ -120,6 +120,7 @@ export function UpdateAddress({
         placement: "top",
       });
       setIsOpen(false);
+      refresh();
     } else {
       toast.show(response.message, {
         type: "danger",
@@ -127,7 +128,7 @@ export function UpdateAddress({
       });
     }
     setIsLoadingDelete(false);
-  }, [addressData, toast]);
+  }, [addressData, toast, refresh]);
 
   return (
     <View style={styles.overlaySearch}>
@@ -146,7 +147,7 @@ export function UpdateAddress({
         <View style={styles.container}>
           <GilroyText style={styles.title}>Editar endereço</GilroyText>
 
-          <View style={styles.formContainer}>
+          <ScrollView style={styles.formContainer}>
             <Controller
               name="name"
               control={control}
@@ -303,7 +304,7 @@ export function UpdateAddress({
                 />
               )}
             />
-          </View>
+          </ScrollView>
 
           <Button
             mode="contained"
