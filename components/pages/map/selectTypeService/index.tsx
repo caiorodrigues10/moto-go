@@ -53,7 +53,7 @@ export default function SelectTypeService({
       setIsLoadingMore(page > 1);
       const response = await getServicesType();
 
-      if (response.result === "success") {
+      if (response?.result === "success") {
         if (page === 1) {
           setTypeServices(response?.data || []);
         } else {

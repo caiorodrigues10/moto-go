@@ -16,7 +16,7 @@ interface IGetAddressResponse {
 
 export const getAddress = async (
   value: string
-): Promise<IGetAddressResponse> => {
+): Promise<IGetAddressResponse | undefined> => {
   const response = await fetch(`https://viacep.com.br/ws/${value}/json/`, {
     method: "GET",
     headers: {
@@ -25,6 +25,10 @@ export const getAddress = async (
   })
     .then((res) => res.json())
     .catch((err) => err.response);
+
+  if (response.erro === true) {
+    return undefined;
+  }
 
   return response;
 };

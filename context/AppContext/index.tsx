@@ -1,6 +1,6 @@
 import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
-import { ITypeService } from "@/services/service/types";
+import { IServiceType } from "@/services/serviceType/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export interface AppContextData {
@@ -24,8 +24,8 @@ export interface AppContextData {
   setIsOpenSelectDriver: (value: boolean) => void;
   driver: IDriver;
   setDriver: (value: IDriver) => void;
-  typeService: ITypeService;
-  setTypeService: (value: ITypeService) => void;
+  typeService: IServiceType;
+  setTypeService: (value: IServiceType) => void;
   isOpenSelectTypeServiceModal: boolean;
   setIsOpenSelectTypeServiceModal: (value: boolean) => void;
 }
@@ -48,7 +48,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     useState(false);
   const [isOpenSelectDriver, setIsOpenSelectDriver] = useState(false);
   const [driver, setDriver] = useState({} as IDriver);
-  const [typeService, setTypeService] = useState({} as ITypeService);
+  const [typeService, setTypeService] = useState({} as IServiceType);
   const [isOpenSelectTypeServiceModal, setIsOpenSelectTypeServiceModal] =
     useState(false);
 

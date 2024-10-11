@@ -17,16 +17,30 @@ import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string({ required_error: "Nome é obrigatório" }),
-  zipcode: z.string({ required_error: "CEP é obrigatório" }),
-  address: z.string({ required_error: "Rua é obrigatório" }),
-  district: z.string({ required_error: "Bairro é obrigatório" }),
-  address_number: z.coerce.number({
-    required_error: "Número é obrigatório",
-    invalid_type_error: "Número é obrigatório",
-  }),
-  city: z.string({ required_error: "Cidade é obrigatório" }),
-  state: z.string({ required_error: "Estado é obrigatório" }),
+  name: z
+    .string({ required_error: "Nome é obrigatório" })
+    .min(1, "Nome é obrigatório"),
+  zipcode: z
+    .string({ required_error: "CEP é obrigatório" })
+    .min(1, "CEP é obrigatório"),
+  address: z
+    .string({ required_error: "Rua é obrigatório" })
+    .min(1, "Rua é obrigatório"),
+  district: z
+    .string({ required_error: "Bairro é obrigatório" })
+    .min(1, "Bairro é obrigatório"),
+  address_number: z.coerce
+    .number({
+      required_error: "Número é obrigatório",
+      invalid_type_error: "Número é obrigatório",
+    })
+    .min(1, "Número é obrigatório"),
+  city: z
+    .string({ required_error: "Cidade é obrigatório" })
+    .min(1, "Cidade é obrigatório"),
+  state: z
+    .string({ required_error: "Estado é obrigatório" })
+    .min(1, "Estado é obrigatório"),
   complement: z.string().optional(),
 });
 
@@ -106,6 +120,7 @@ export function NewAddress({
               <TextInputCustom
                 onBlur={onBlur}
                 value={value}
+                styles={{ container: { marginBottom: 8 } }}
                 disabled={isLoading}
                 onChangeText={(e) => {
                   onChange(e);
@@ -124,6 +139,7 @@ export function NewAddress({
                 onBlur={onBlur}
                 value={value}
                 disabled={isLoading}
+                styles={{ container: { marginBottom: 8 } }}
                 onChangeText={async (e) => {
                   onChange(e);
                   setValue("zipcode", cepMask(e));
@@ -147,6 +163,7 @@ export function NewAddress({
                 onBlur={onBlur}
                 value={value}
                 disabled={isLoading}
+                styles={{ container: { marginBottom: 8 } }}
                 onChangeText={(e) => {
                   onChange(e);
                 }}
@@ -187,7 +204,7 @@ export function NewAddress({
                   onChangeText={(e) => {
                     onChange(Number(e));
                   }}
-                  styles={{ container: { width: 140 } }}
+                  styles={{ container: { width: 140, marginBottom: 8 } }}
                   isInvalid={!!errors.address_number}
                   errorMessage={String(errors.address_number?.message)}
                   placeholder="Número"
@@ -200,7 +217,7 @@ export function NewAddress({
           <View style={styles.selectContainer}>
             <SelectItems
               options={statesOfBrazil.map((e) => ({
-                label: `${e.code} |  ${e.name}`,
+                label: `${e.code} | ${e.name}`,
                 value: e.code,
                 showValue: `${e.code}`,
               }))}
@@ -245,6 +262,7 @@ export function NewAddress({
                 onBlur={onBlur}
                 value={value || ""}
                 disabled={isLoading}
+                styles={{ container: { marginBottom: 8 } }}
                 onChangeText={(e) => {
                   onChange(e);
                 }}
@@ -259,7 +277,7 @@ export function NewAddress({
         <Button
           mode="contained"
           buttonColor="#FFE924"
-          style={{ marginTop: 12, marginBottom: 12 }}
+          style={{ marginTop: 12, marginBottom: 12, zIndex: -1 }}
           onPress={handleSubmit((e) => onSubmit(e))}
         >
           <GilroyText style={{ color: "#000" }}>Cadastrar endereço</GilroyText>
@@ -340,7 +358,6 @@ const styles = StyleSheet.create({
   formContainer: {
     flexDirection: "column",
     width: "100%",
-    gap: 16,
     zIndex: 1,
   },
   containerInLine: {
@@ -351,6 +368,7 @@ const styles = StyleSheet.create({
   inputInContainerInLine: {
     width: "100%",
     flex: 1,
+    marginBottom: 8,
   },
   selectContainer: {
     flexDirection: "row",

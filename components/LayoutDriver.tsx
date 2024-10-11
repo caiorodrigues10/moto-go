@@ -28,7 +28,7 @@ export function DriverLayout() {
         tabBarIcon: ({ color, size }) => {
           const iconName =
             route.name === "Corridas"
-              ? "map"
+              ? "motorcycle"
               : route.name === "Minhas corridas"
               ? "history"
               : route.name === "Meu perfil"

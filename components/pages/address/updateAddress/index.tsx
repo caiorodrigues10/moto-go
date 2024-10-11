@@ -5,16 +5,12 @@ import { View } from "@/components/Themed";
 import { statesOfBrazil } from "@/constants/states";
 import { getAddress } from "@/providers/getAddressByCEP";
 import { cepMask, removedMask } from "@/providers/maskProviders";
-import {
-  createUserAddress,
-  deleteUserAddress,
-  updateUserAddress,
-} from "@/services/users";
+import { deleteUserAddress, updateUserAddress } from "@/services/users";
 import { ICreateUserAddress, IUserAddress } from "@/services/users/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
@@ -22,16 +18,30 @@ import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string({ required_error: "Nome é obrigatório" }),
-  zipcode: z.string({ required_error: "CEP é obrigatório" }),
-  address: z.string({ required_error: "Rua é obrigatório" }),
-  district: z.string({ required_error: "Bairro é obrigatório" }),
-  address_number: z.coerce.number({
-    required_error: "Número é obrigatório",
-    invalid_type_error: "Número é obrigatório",
-  }),
-  city: z.string({ required_error: "Cidade é obrigatório" }),
-  state: z.string({ required_error: "Estado é obrigatório" }),
+  name: z
+    .string({ required_error: "Nome é obrigatório" })
+    .min(1, "Nome é obrigatório"),
+  zipcode: z
+    .string({ required_error: "CEP é obrigatório" })
+    .min(1, "CEP é obrigatório"),
+  address: z
+    .string({ required_error: "Rua é obrigatório" })
+    .min(1, "Rua é obrigatório"),
+  district: z
+    .string({ required_error: "Bairro é obrigatório" })
+    .min(1, "Bairro é obrigatório"),
+  address_number: z.coerce
+    .number({
+      required_error: "Número é obrigatório",
+      invalid_type_error: "Número é obrigatório",
+    })
+    .min(1, "Número é obrigatório"),
+  city: z
+    .string({ required_error: "Cidade é obrigatório" })
+    .min(1, "Cidade é obrigatório"),
+  state: z
+    .string({ required_error: "Estado é obrigatório" })
+    .min(1, "Estado é obrigatório"),
   complement: z.string().optional().nullable(),
 });
 
@@ -66,7 +76,7 @@ export function UpdateAddress({
       district: addressData.district,
       name: addressData.name,
       state: addressData.state,
-      zipcode: addressData.zipcode,
+      zipcode: cepMask(addressData.zipcode),
     },
   });
 
@@ -155,6 +165,7 @@ export function UpdateAddress({
                 <TextInputCustom
                   onBlur={onBlur}
                   value={value}
+                  styles={{ container: { marginBottom: 8 } }}
                   disabled={isLoading}
                   onChangeText={(e) => {
                     onChange(e);
@@ -173,6 +184,7 @@ export function UpdateAddress({
                   onBlur={onBlur}
                   value={value}
                   disabled={isLoading}
+                  styles={{ container: { marginBottom: 8 } }}
                   onChangeText={async (e) => {
                     onChange(e);
                     setValue("zipcode", cepMask(e));
@@ -196,6 +208,7 @@ export function UpdateAddress({
                   onBlur={onBlur}
                   value={value}
                   disabled={isLoading}
+                  styles={{ container: { marginBottom: 8 } }}
                   onChangeText={(e) => {
                     onChange(e);
                   }}
@@ -237,7 +250,7 @@ export function UpdateAddress({
                     onChangeText={(e) => {
                       onChange(Number(e));
                     }}
-                    styles={{ container: { width: 140 } }}
+                    styles={{ container: { width: 140, marginBottom: 8 } }}
                     isInvalid={!!errors.address_number}
                     errorMessage={String(errors.address_number?.message)}
                     placeholder="Número"
@@ -263,6 +276,7 @@ export function UpdateAddress({
                   styleList: { minWidth: 200, height: 200 },
                   styleContent: {
                     width: 134,
+                    marginBottom: 8,
                   },
                 }}
               />
@@ -295,6 +309,7 @@ export function UpdateAddress({
                   onBlur={onBlur}
                   value={value || ""}
                   disabled={isLoading}
+                  styles={{ container: { marginBottom: 8 } }}
                   onChangeText={(e) => {
                     onChange(e);
                   }}
@@ -316,7 +331,7 @@ export function UpdateAddress({
             disabled={isLoadingDelete}
             contentStyle={isLoadingDelete && { backgroundColor: "#dbc505" }}
           >
-            <GilroyText style={{ color: "#000" }}>Editar endereço</GilroyText>
+            <GilroyText style={{ color: "#000" }}>Salvar</GilroyText>
           </Button>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <Button
@@ -421,6 +436,7 @@ const styles = StyleSheet.create({
   inputInContainerInLine: {
     width: "100%",
     flex: 1,
+    marginBottom: 8,
   },
   selectContainer: {
     flexDirection: "row",

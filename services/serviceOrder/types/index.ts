@@ -16,12 +16,12 @@ interface IServiceOrders {
 interface ICreateServiceOrders {
   service_type_id: number;
   initial_location: {
-    lat: string;
-    long: string;
+    lat: number;
+    long: number;
   };
   final_location: {
-    lat: string;
-    long: string;
+    lat: number;
+    long: number;
   };
   driver_id: number | null;
   user_id: number;
@@ -45,9 +45,15 @@ interface IResponseListServiceOrders extends AppResponse {
   };
 }
 
+interface IUpdateServiceOrder {
+  driverId?: number;
+  comments?: string;
+}
+
 export type {
   ICreateServiceOrders,
   IServiceOrders,
   IResponseListServiceOrders,
   IListServiceOrders,
+  IUpdateServiceOrder,
 };

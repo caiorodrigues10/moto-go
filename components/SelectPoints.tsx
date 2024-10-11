@@ -12,6 +12,7 @@ import { useToast } from "react-native-toast-notifications";
 import { StatusBar } from "expo-status-bar";
 import { getUserAddress } from "@/services/users";
 import { IUserAddress } from "@/services/users/types";
+import { cepMask } from "@/providers/maskProviders";
 
 interface IAddressComplete {
   formatted_address: string;
@@ -38,7 +39,7 @@ export function SelectPoints() {
   const [currentAddress, setCurrentAddress] = useState<IAddressComplete | null>(
     null
   );
-  const [address, setAddress] = useState([] as IUserAddress[]);
+  const [address, setAddress] = useState([] as IAddressComplete[]);
 
   const {
     setRoute,
@@ -57,7 +58,7 @@ export function SelectPoints() {
   const fetchCurrentAddress = async (coordinate: Coordinate) => {
     try {
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinate.latitude},${coordinate.longitude}&key=AIzaSyDq01fC9UJax3aq5qD0aQFYqvyUMSeS7Rs`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinate.latitude},${coordinate.longitude}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`
       );
       const address = response.data.results[0]?.formatted_address;
       if (address) {
@@ -82,7 +83,7 @@ export function SelectPoints() {
   ): Promise<void> => {
     try {
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${input}&key=AIzaSyDq01fC9UJax3aq5qD0aQFYqvyUMSeS7Rs&language=pt-BR&components=country:BR`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${input}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}&language=pt-BR&components=country:BR`
       );
 
       if (response.data.results && response.data.results.length > 0) {
@@ -189,7 +190,35 @@ export function SelectPoints() {
     const response = await getUserAddress({ page: 0, limit: 1000 });
 
     if (response.result === "success") {
-      setAddress(response.data?.list || []);
+      if (response.data?.list[0]) {
+        const addresses = await Promise.all(
+          response.data?.list.map(async (e) => {
+            const address = `${e.address} ${e.address_number}, ${e.city} - ${e.state}`;
+            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+              address
+            )}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`;
+
+            const geocodeResponse = await fetch(url)
+              .then((res) => res.json())
+              .catch((err) => console.log(err));
+
+            const location = geocodeResponse?.results[0]?.geometry
+              ?.location || { lat: "0", lng: "0" };
+
+            return {
+              formatted_address: `${e.address} - ${e.district}, ${
+                e.address_number
+              }, ${e.city} - ${e.state}, ${cepMask(e.zipcode)}, Brasil`,
+              lat: location.lat,
+              lon: location.lng,
+              nameShow: e.name,
+              place_id: String(e.id),
+            };
+          })
+        );
+
+        setAddress(addresses);
+      }
     } else {
       toast.show(response.message, {
         type: "danger",
@@ -286,6 +315,7 @@ export function SelectPoints() {
         <FlatList
           data={
             [
+              ...address,
               ...(currentLocation && currentAddress
                 ? [
                     {
@@ -320,7 +350,7 @@ export function SelectPoints() {
       )}
       {isFocusFinal && (
         <FlatList
-          data={suggestionsFinal as IAddressComplete[]}
+          data={[...address, ...suggestionsFinal] as IAddressComplete[]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity

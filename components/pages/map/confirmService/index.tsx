@@ -4,7 +4,7 @@ import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
 import { IServiceType } from "@/services/serviceType/types";
 import { StatusBar } from "expo-status-bar";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   Image,
   Modal,
@@ -16,12 +16,20 @@ import {
 import { Button, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import SelectTypeServiceModal from "../selectTypeServiceModal";
+import { createServiceOrder } from "@/services/serviceOrder";
+import { ICreateServiceOrders } from "@/services/serviceOrder/types";
+import { getValueLocal } from "@/providers/getValueLocal";
+import { useToast } from "react-native-toast-notifications";
 
-export default function ConfirmService({
+export function ConfirmService({
   currentLocation,
+  fetchServiceOrderActive,
 }: {
   currentLocation: Coordinate | null;
+  fetchServiceOrderActive: () => Promise<void>;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     visibleModalConfirmService,
     setVisibleModalConfirmService,
@@ -40,6 +48,8 @@ export default function ConfirmService({
     typeService,
     setIsOpenSelectTypeServiceModal,
     isOpenSelectTypeServiceModal,
+    initial,
+    destination,
   } = useAppContext();
 
   const clearService = useCallback(() => {
@@ -52,6 +62,31 @@ export default function ConfirmService({
     setInitial(currentLocation);
     setVisibleModalConfirmService(false);
   }, [currentLocation]);
+
+  const toast = useToast();
+
+  const onSubmit = useCallback(
+    async (data: ICreateServiceOrders) => {
+      setIsLoading(true);
+      const response = await createServiceOrder(data);
+
+      if (response?.result === "success") {
+        toast.show(response?.message, {
+          type: "success",
+          placement: "top",
+        });
+        await fetchServiceOrderActive();
+      } else {
+        toast.show(response?.message, {
+          type: "danger",
+          placement: "top",
+        });
+      }
+
+      setIsLoading(false);
+    },
+    [toast]
+  );
 
   return (
     <Modal
@@ -288,6 +323,25 @@ export default function ConfirmService({
           mode="contained"
           buttonColor="#FFE924"
           style={{ marginBottom: 24 }}
+          onPress={() => {
+            const userId = getValueLocal("id");
+
+            onSubmit({
+              comments: "",
+              driver_id: driver?.id || null,
+
+              initial_location: {
+                lat: initial?.latitude!,
+                long: initial?.longitude!,
+              },
+              final_location: {
+                lat: destination.latitude,
+                long: destination.longitude,
+              },
+              service_type_id: typeService.id,
+              user_id: Number(userId),
+            });
+          }}
         >
           <GilroyText style={{ color: "#000" }}>Iniciar serviço</GilroyText>
         </Button>

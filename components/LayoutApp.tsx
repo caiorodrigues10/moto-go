@@ -27,7 +27,7 @@ export default function App() {
         headerShown: false,
         tabBarIcon: ({ color, size }) => {
           const iconName =
-            route.name === "Corridas"
+            route.name === "Mapa"
               ? "map"
               : route.name === "Endereços"
               ? "map-marker"
@@ -44,7 +44,7 @@ export default function App() {
         },
       })}
     >
-      <Tab.Screen name="Corridas" component={MapScreen} />
+      <Tab.Screen name="Mapa" component={MapScreen} />
       <Tab.Screen name="Endereços" component={LocationsScreen} />
       <Tab.Screen name="Meu perfil" component={ProfileScreen} />
     </Tab.Navigator>

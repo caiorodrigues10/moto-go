@@ -16,9 +16,7 @@ interface ICreateUser {
 }
 
 interface IUpdateUser {
-  cpf: string;
   name: string;
-  telephone?: string;
 }
 
 interface IUserByIdResponse extends AppResponse {

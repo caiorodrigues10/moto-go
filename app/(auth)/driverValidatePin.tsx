@@ -143,10 +143,4 @@ const styles = StyleSheet.create({
     color: "#00BFFF",
     textDecorationLine: "underline",
   },
-  selectContainer: {
-    flexDirection: "row",
-    width: "100%",
-    zIndex: 999,
-    gap: 16,
-  },
 });

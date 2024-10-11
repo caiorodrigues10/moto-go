@@ -1,18 +1,16 @@
-import React, { useCallback, useState } from "react";
+import { createUser } from "@/services/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { router } from "expo-router";
+import React, { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { Button, TextInput } from "react-native-paper";
+import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { GilroyText } from "../../components/GilroyText";
 import { TextInputCustom } from "../../components/TextInputCustom";
 import { BodyPage, View } from "../../components/Themed";
-import { router } from "expo-router";
-import { SelectItems } from "../../components/SelectItems";
-import { flags } from "../../constants/flags";
 import { phoneMask } from "../../providers/maskProviders";
-import { Button, TextInput } from "react-native-paper";
-import { createUser } from "@/services/users";
-import { useToast } from "react-native-toast-notifications";
 
 const schema = z.object({
   name: z.string({ required_error: "Nome é obrigatório" }),
@@ -53,10 +51,6 @@ export default function Login() {
     [toast]
   );
 
-  const handleSelect = (option: { label: string; value: string }) => {
-    console.log("Selected option:", option);
-  };
-
   return (
     <BodyPage style={styles.bodyPage}>
       <GilroyText style={styles.title}>Cadastrar-se</GilroyText>
@@ -84,49 +78,31 @@ export default function Login() {
           )}
         />
 
-        <View style={styles.selectContainer}>
-          <SelectItems
-            options={flags.map((e) => ({
-              label: `${e.flag} ${e.code}  |  ${e.name}`,
-              value: e.name,
-              showValue: `${e.flag} ${e.code} `,
-            }))}
-            onSelect={handleSelect}
-            placeholder=""
-            defaultValue="Brazil"
-            styles={{
-              styleList: { minWidth: 200 },
-            }}
-          />
-          <Controller
-            name="telephone"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInputCustom
-                onBlur={onBlur}
-                value={value}
-                onChangeText={(e) => {
-                  onChange(e);
-                  setValue("telephone", phoneMask(e));
-                }}
-                isInvalid={!!errors.telephone}
-                styles={{
-                  container: { flex: 1 },
-                }}
-                errorMessage={String(errors.telephone?.message)}
-                left={
-                  <TextInput.Icon
-                    icon="phone"
-                    color={(isTextInputFocused) =>
-                      isTextInputFocused || value ? "#ffffff" : "#ffffff70"
-                    }
-                  />
-                }
-                placeholder="Telefone"
-              />
-            )}
-          />
-        </View>
+        <Controller
+          name="telephone"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInputCustom
+              onBlur={onBlur}
+              value={value}
+              onChangeText={(e) => {
+                onChange(e);
+                setValue("telephone", phoneMask(e));
+              }}
+              isInvalid={!!errors.telephone}
+              errorMessage={String(errors.telephone?.message)}
+              left={
+                <TextInput.Icon
+                  icon="phone"
+                  color={(isTextInputFocused) =>
+                    isTextInputFocused || value ? "#ffffff" : "#ffffff70"
+                  }
+                />
+              }
+              placeholder="Telefone"
+            />
+          )}
+        />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -167,12 +143,6 @@ const styles = StyleSheet.create({
   formContainer: {
     flexDirection: "column",
     width: "100%",
-  },
-  selectContainer: {
-    flexDirection: "row",
-    width: "100%",
-    zIndex: 999,
-    gap: 16,
   },
   buttonContainer: {
     flexDirection: "column",

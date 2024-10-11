@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
-import * as Location from "expo-location";
-import { TextInputCustom } from "@/components/TextInputCustom";
-import { GilroyText } from "@/components/GilroyText";
-import { Button, TextInput } from "react-native-paper";
 import { SelectPoints } from "@/components/SelectPoints";
 import { useAppContext } from "@/context/AppContext";
 import { Coordinate } from "@/services/Coordinate";
-import ConfirmService from "./confirmService";
-import SelectTypeService from "./selectTypeService";
+import * as Location from "expo-location";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, View } from "react-native";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import { ConfirmService } from "./confirmService";
 import { SelectDriver } from "./selectDriver";
+import SelectTypeService from "./selectTypeService";
+import { getServiceOrder } from "@/services/serviceOrder";
+import { IListServiceOrders } from "@/services/serviceOrder/types";
+import { ServiceOrderActive } from "./serviceOrderActive";
 
 const locationIcon = require("../../../assets/images/location-icon.png");
 // const motoIcon = require("../../../assets/images/moto-icon.png");
@@ -36,6 +36,8 @@ export default function MapTeste() {
   );
   // const [motoLocation, setMotoLocation] = useState<Coordinate | null>(null);
   const mapRef = useRef<MapView | null>(null);
+  const [raceActive, setRaceActive] = useState({} as IListServiceOrders);
+
   // const routeIndex = useRef(0);
   // const intervalId = useRef<number | NodeJS.Timeout | null>(null);
 
@@ -112,6 +114,22 @@ export default function MapTeste() {
     })();
   }, [currentLocation]);
 
+  const fetchServiceOrderActive = useCallback(async () => {
+    const response = await getServiceOrder({ limit: 1000, page: 0 });
+
+    if (response?.result === "success") {
+      const raceActive = response.data?.list.find((e) => e.end_at === null);
+
+      if (raceActive) {
+        setRaceActive(raceActive || {});
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchServiceOrderActive();
+  }, []);
+
   return (
     <View style={styles.container}>
       <MapView
@@ -167,10 +185,16 @@ export default function MapTeste() {
           <Polyline coordinates={route} strokeColor="hotpink" strokeWidth={3} />
         )}
       </MapView>
-      <SelectTypeService currentLocation={currentLocation} />
+      {!raceActive?.id && (
+        <SelectTypeService currentLocation={currentLocation} />
+      )}
       {focusSearch && <SelectPoints />}
-      <ConfirmService currentLocation={currentLocation} />
+      <ConfirmService
+        currentLocation={currentLocation}
+        fetchServiceOrderActive={fetchServiceOrderActive}
+      />
       {isOpenSelectDriver && <SelectDriver />}
+      {raceActive?.id && <ServiceOrderActive raceActive={raceActive} />}
     </View>
   );
 }

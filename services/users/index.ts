@@ -1,4 +1,6 @@
 import { getValueLocal } from "@/providers/getValueLocal";
+import { AppResponse } from "@/services/AppResponse";
+import api from "@/services/api";
 import {
   IChangeUserPassword,
   ICreateUser,
@@ -7,12 +9,10 @@ import {
   IResponseUserAddress,
   IUpdateUser,
   IUpdateUserResponse,
+  IUserByIdResponse,
   IValidatePin,
   IValidatePinResponse,
 } from "./types";
-import api from "@/services/api";
-import { AppResponse } from "@/services/AppResponse";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function updateUser(
   data: IUpdateUser,
@@ -197,6 +197,22 @@ export async function deleteUserAddress({
   const response = await fetch(`${api}/userAddress/${id}`, {
     method: "DELETE",
     headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}
+
+export async function getUserById(id: number): Promise<IUserByIdResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/users/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   })

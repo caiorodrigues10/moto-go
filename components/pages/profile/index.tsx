@@ -45,7 +45,7 @@ export function Profile() {
         style={styles.contentUser}
         onPress={() =>
           router.push(
-            typeUser === "user" ? "/(root)/teste" : "/(rootDriver)/edit"
+            typeUser === "user" ? "/(root)/edit" : "/(rootDriver)/edit"
           )
         }
       >
