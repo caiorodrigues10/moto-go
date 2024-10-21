@@ -1,18 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { View } from "./Themed";
-import { TextInputCustom } from "./TextInputCustom";
-import { Button, TextInput } from "react-native-paper";
-import * as Location from "expo-location";
-import axios from "axios";
-import { GilroyText } from "./GilroyText";
 import { useAppContext } from "@/context/AppContext";
-import { Coordinate } from "@/services/Coordinate";
-import { useToast } from "react-native-toast-notifications";
-import { StatusBar } from "expo-status-bar";
-import { getUserAddress } from "@/services/users";
-import { IUserAddress } from "@/services/users/types";
 import { cepMask } from "@/providers/maskProviders";
+import { Coordinate } from "@/services/Coordinate";
+import { getUserAddress } from "@/services/users";
+import axios from "axios";
+import * as Location from "expo-location";
+import { StatusBar } from "expo-status-bar";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, TextInput } from "react-native-paper";
+import { useToast } from "react-native-toast-notifications";
+import { GilroyText } from "./GilroyText";
+import { TextInputCustom } from "./TextInputCustom";
+import { View } from "./Themed";
 
 interface IAddressComplete {
   formatted_address: string;
@@ -189,7 +188,7 @@ export function SelectPoints() {
   const fetchAddress = useCallback(async () => {
     const response = await getUserAddress({ page: 0, limit: 1000 });
 
-    if (response.result === "success") {
+    if (response?.result === "success") {
       if (response.data?.list[0]) {
         const addresses = await Promise.all(
           response.data?.list.map(async (e) => {
@@ -220,10 +219,13 @@ export function SelectPoints() {
         setAddress(addresses);
       }
     } else {
-      toast.show(response.message, {
-        type: "danger",
-        placement: "top",
-      });
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "danger",
+          placement: "top",
+        }
+      );
     }
   }, [toast]);
 
@@ -254,7 +256,6 @@ export function SelectPoints() {
             onChangeText={setQueryInitial}
             placeholder="Ponto inicial"
             onFocus={() => setIsFocusInitial(true)}
-            onBlur={() => setIsFocusInitial(false)}
             value={queryInitial}
             left={
               <TextInput.Icon
@@ -269,7 +270,6 @@ export function SelectPoints() {
             onChangeText={setQueryFinal}
             placeholder="Ponto Final"
             onFocus={() => setIsFocusFinal(true)}
-            onBlur={() => setIsFocusFinal(false)}
             value={queryFinal}
             left={
               <TextInput.Icon
@@ -297,6 +297,7 @@ export function SelectPoints() {
               loading={isLoading}
               onPress={searchRoute}
               style={{ width: "50%" }}
+              textColor="#000"
             >
               <GilroyText
                 style={
@@ -339,6 +340,7 @@ export function SelectPoints() {
                   longitude: parseFloat(item.lon),
                 });
                 setSuggestionsInitial([]);
+                setIsFocusInitial(false);
               }}
             >
               <GilroyText style={styles.textSuggestionItem}>
@@ -362,6 +364,7 @@ export function SelectPoints() {
                   longitude: parseFloat(item.lon),
                 });
                 setSuggestionsFinal([]);
+                setIsFocusFinal(false);
               }}
             >
               <GilroyText style={styles.textSuggestionItem}>

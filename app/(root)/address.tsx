@@ -29,7 +29,7 @@ export default function AddressList() {
       setIsLoadingMore(page > 1);
       const response = await getUserAddress({ page, limit: 10 });
 
-      if (response.result === "success") {
+      if (response?.result === "success") {
         if (page === 1) {
           setAddress(response.data?.list || []);
         } else {
@@ -40,10 +40,14 @@ export default function AddressList() {
           setHasMore(false);
         }
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
 
       setIsLoading(false);

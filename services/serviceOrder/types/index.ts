@@ -11,6 +11,7 @@ interface IServiceOrders {
   user_id: number;
   comments: string | null;
   accepted: boolean;
+  active: boolean;
 }
 
 interface ICreateServiceOrders {
@@ -46,8 +47,9 @@ interface IResponseListServiceOrders extends AppResponse {
 }
 
 interface IUpdateServiceOrder {
-  driverId?: number;
   comments?: string;
+  driver_id?: number;
+  accepted?: boolean;
 }
 
 export type {

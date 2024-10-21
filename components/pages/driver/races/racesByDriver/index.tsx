@@ -1,42 +1,18 @@
 import { GilroyText } from "@/components/GilroyText";
 import { BodyPage, View } from "@/components/Themed";
 import { useAppDriverContext } from "@/context/AppDriverContext";
-import React, { useEffect, useState } from "react";
+import { useApi } from "@/providers/useApi";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-paper";
 import { ConfirmRace } from "../mapRace";
 import RaceInProgress from "../raceInProgress";
-
-interface Race {
-  id: string;
-  userName: string;
-  serviceDistance: number;
-  service: string;
-  createdAt: string;
-  address: string;
-}
-
-const mockRaces: Race[] = [
-  {
-    id: "1",
-    userName: "Carlos Silva",
-    serviceDistance: 5.2,
-    service: "Transporte",
-    address: "Rua das coxinhas",
-    createdAt: "01/10/2024 15:30",
-  },
-  {
-    id: "2",
-    userName: "Ana Costa",
-    serviceDistance: 3.8,
-    service: "Entrega",
-    address: "Rua das esfirras",
-    createdAt: "01/10/2024 14:30",
-  },
-];
+import { IResponseListServiceOrders } from "@/services/serviceOrder/types";
+import { updateServiceOrder } from "@/services/serviceOrder";
+import { getValueLocal } from "@/providers/getValueLocal";
+import { useToast } from "react-native-toast-notifications";
 
 export default function RacesByDriver() {
-  const [races, setRaces] = useState<Race[]>([]);
   const {
     setDestination,
     isAccept,
@@ -45,19 +21,44 @@ export default function RacesByDriver() {
     setRaceInProgress,
   } = useAppDriverContext();
 
-  useEffect(() => {
-    setRaces(mockRaces);
+  const toast = useToast();
+
+  const handleAccept = useCallback(async (id: number) => {
+    console.log(`Corrida com ID ${id} aceita.`);
+    setIsAccept(String(id));
+    const driverId = await getValueLocal("id");
+
+    const response = await updateServiceOrder(
+      { accepted: true, driver_id: Number(driverId) },
+      id
+    );
+
+    if (response?.result === "success") {
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "success",
+          placement: "top",
+        }
+      );
+    } else {
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "danger",
+          placement: "top",
+        }
+      );
+    }
   }, []);
 
-  const handleAccept = (id: string) => {
-    console.log(`Corrida com ID ${id} aceita.`);
-    setIsAccept(id);
-    setDestination({ latitude: -21.31941, longitude: -48.13291 });
-  };
+  // const handleReject = (id: string) => {
+  //   setRaces((prevRaces) => prevRaces.filter((race) => race.id !== id));
+  // };
 
-  const handleReject = (id: string) => {
-    setRaces((prevRaces) => prevRaces.filter((race) => race.id !== id));
-  };
+  const { data, error, isLoading } = useApi<IResponseListServiceOrders>(
+    "/serviceOrders?page=0&limit=1000"
+  );
 
   if (raceInProgress) {
     return <RaceInProgress />;
@@ -107,25 +108,22 @@ export default function RacesByDriver() {
       </TouchableOpacity>
       <FlatList
         style={styles.flatList}
-        data={races}
-        keyExtractor={(item) => item.id}
+        data={data?.data?.list.filter((e) => e.active && !e.accepted)}
+        keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
           <View style={styles.raceItem}>
             <GilroyText style={styles.userName} weight="bold">
-              {item.userName}
+              {item.user_name}
             </GilroyText>
-            <GilroyText style={styles.distance} weight="medium">
-              Distância até o serviço: {item.serviceDistance} km
-            </GilroyText>
-            <GilroyText style={styles.distance} weight="medium">
-              Endereço: {item.address}
-            </GilroyText>
-            <GilroyText style={styles.distance} weight="medium">
+            {/* <GilroyText style={styles.distance} weight="medium">
+              Endereço: {item.}
+            </GilroyText> */}
+            {/* <GilroyText style={styles.distance} weight="medium">
               Tipo de serviço: {item.service}
-            </GilroyText>
-            <GilroyText style={styles.distance} weight="medium">
+            </GilroyText> */}
+            {/* <GilroyText style={styles.distance} weight="medium">
               Criado em: {item.createdAt}
-            </GilroyText>
+            </GilroyText> */}
 
             {/* Ícones de aceitar e recusar */}
             <View style={styles.buttonContainer}>

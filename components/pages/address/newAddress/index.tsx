@@ -72,18 +72,26 @@ export function NewAddress({
 
       const response = await createUserAddress(data);
 
-      if (response.result === "success") {
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+      if (response?.result === "success") {
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
         refresh();
         setIsOpen(false);
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       setIsLoading(false);
     },

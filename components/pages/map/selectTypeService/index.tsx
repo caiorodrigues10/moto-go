@@ -67,10 +67,14 @@ export default function SelectTypeService({
           setHasMore(false);
         }
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
 
       setIsLoading(false);

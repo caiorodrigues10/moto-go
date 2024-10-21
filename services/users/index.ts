@@ -221,3 +221,26 @@ export async function getUserById(id: number): Promise<IUserByIdResponse> {
 
   return response;
 }
+
+export async function updateFCMTokenUser(data: {
+  fcmToken: string;
+}): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  console.log(data.fcmToken, "testeee");
+
+  const response = await fetch(`${api}/users/fcmToken`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  console.log(response);
+
+  return response;
+}

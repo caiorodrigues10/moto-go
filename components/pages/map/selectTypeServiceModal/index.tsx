@@ -32,7 +32,7 @@ export default function SelectTypeServiceModal() {
     setIsLoading(true);
     const response = await getServicesType();
 
-    if (response.result === "success") {
+    if (response?.result === "success") {
       setTypeServices(response?.data || []);
     } else {
       setTypeServices((prevDrivers) => [
@@ -40,10 +40,13 @@ export default function SelectTypeServiceModal() {
         ...(response.data || []),
       ]);
 
-      toast.show(response.message, {
-        type: "danger",
-        placement: "top",
-      });
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "danger",
+          placement: "top",
+        }
+      );
     }
 
     setIsLoading(false);

@@ -53,17 +53,25 @@ export default function EditUser() {
 
       const response = await updateUser(data, id);
 
-      if (response.result === "success") {
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+      if (response?.result === "success") {
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
         setValueLocal({ key: "name", value: data.name });
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       setIsLoading(false);
     },
@@ -82,7 +90,7 @@ export default function EditUser() {
 
       const response = await getUserById(Number(id));
 
-      if (response?.data && response.result === "success") {
+      if (response?.data && response?.result === "success") {
         setId(Number(id));
         setValue("name", response.data.name);
         setTelephone(phoneMask(response.data.telephone || ""));

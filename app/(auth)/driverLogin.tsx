@@ -45,18 +45,26 @@ export default function Login() {
       const newData = { telephone: data.telephone } as ILogin;
       const response = await driverLogin(newData);
 
-      if (response.result === "success") {
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+      if (response?.result === "success") {
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
         setTelephone(data.telephone);
         router.replace("/(auth)/driverValidatePin");
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       setIsLoading(false);
     },

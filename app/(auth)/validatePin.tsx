@@ -46,11 +46,15 @@ export default function ValidatePin() {
 
       const response = await validatePin(newData);
 
-      if (response?.data && response.result === "success") {
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+      if (response?.data && response?.result === "success") {
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
         router.push("/(root)/activeLocale");
         setUserLocal({
           token: response.data.token,
@@ -58,10 +62,14 @@ export default function ValidatePin() {
           typeUser: "user",
         });
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       seIsLoading(false);
     },
@@ -84,6 +92,7 @@ export default function ValidatePin() {
               isInvalid={!!errors.code}
               errorMessage={String(errors.code?.message)}
               placeholder="--- ---"
+              keyboardType="numeric"
             />
           )}
         />

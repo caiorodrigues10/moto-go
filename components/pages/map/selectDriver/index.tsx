@@ -30,7 +30,7 @@ export function SelectDriver() {
       setIsLoadingMore(page > 1);
       const response = await getDrivers({ page, limit: 10 });
 
-      if (response.result === "success") {
+      if (response?.result === "success") {
         if (page === 1) {
           setDrivers(response.data?.list || []);
         } else {
@@ -44,10 +44,14 @@ export function SelectDriver() {
           setHasMore(false);
         }
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
 
       setIsLoading(false);

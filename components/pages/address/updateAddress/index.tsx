@@ -86,18 +86,26 @@ export function UpdateAddress({
 
       const response = await updateUserAddress(data, addressData.id);
 
-      if (response.result === "success") {
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+      if (response?.result === "success") {
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
         refresh();
         setIsOpen(false);
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       setIsLoading(false);
     },
@@ -124,18 +132,24 @@ export function UpdateAddress({
     setIsLoadingDelete(true);
     const response = await deleteUserAddress({ id: addressData.id });
 
-    if (response.result === "success") {
-      toast.show(response.message, {
-        type: "success",
-        placement: "top",
-      });
+    if (response?.result === "success") {
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "success",
+          placement: "top",
+        }
+      );
       setIsOpen(false);
       refresh();
     } else {
-      toast.show(response.message, {
-        type: "danger",
-        placement: "top",
-      });
+      toast.show(
+        response?.message || "Serviço indisponível, tente novamente mais tarde",
+        {
+          type: "danger",
+          placement: "top",
+        }
+      );
     }
     setIsLoadingDelete(false);
   }, [addressData, toast, refresh]);

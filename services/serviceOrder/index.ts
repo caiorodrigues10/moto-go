@@ -51,11 +51,13 @@ export async function getServiceOrderByDriver(): Promise<IResponseListServiceOrd
   return response;
 }
 
-export async function updateDriver(
+export async function updateServiceOrder(
   data: IUpdateServiceOrder,
   id: number
 ): Promise<AppResponse> {
   const token = await getValueLocal("token");
+
+  console.log(data);
 
   const response = await fetch(`${api}/serviceOrders/${id}`, {
     method: "PUT",
@@ -83,6 +85,21 @@ export async function createServiceOrder(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}
+
+export async function cancelServiceOrder(id: number): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/serviceOrders/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
     .then((res) => res.json())
     .catch((err) => err.response);

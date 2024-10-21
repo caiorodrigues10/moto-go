@@ -71,7 +71,7 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <ToastProvider>
+    <ToastProvider style={{ zIndex: 9999 }}>
       <AppDriverProvider>
         <AppProvider>
           <PaperProvider>

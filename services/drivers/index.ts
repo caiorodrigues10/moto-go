@@ -86,3 +86,22 @@ export async function getDriverById(id: string): Promise<IDriverByIdResponse> {
 
   return response;
 }
+
+export async function updateFCMTokenDriver(data: {
+  fcmToken: string;
+}): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/drivers/fcmToken`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}

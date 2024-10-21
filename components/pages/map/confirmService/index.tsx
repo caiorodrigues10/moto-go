@@ -75,7 +75,9 @@ export function ConfirmService({
           type: "success",
           placement: "top",
         });
+
         await fetchServiceOrderActive();
+        setVisibleModalConfirmService(false);
       } else {
         toast.show(response?.message, {
           type: "danger",
@@ -354,7 +356,7 @@ export function ConfirmService({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: "rgba(41, 37, 37, 0.6)",
     justifyContent: "flex-end",
   },
   modalContent: {

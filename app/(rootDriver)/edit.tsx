@@ -99,17 +99,25 @@ export default function EditDriver() {
 
       const response = await updateDriver(newData);
 
-      if (response.result === "success") {
+      if (response?.result === "success") {
         await setValueLocal({ key: "name", value: data.name });
-        toast.show(response.message, {
-          type: "success",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "success",
+            placement: "top",
+          }
+        );
       } else {
-        toast.show(response.message, {
-          type: "danger",
-          placement: "top",
-        });
+        toast.show(
+          response?.message ||
+            "Serviço indisponível, tente novamente mais tarde",
+          {
+            type: "danger",
+            placement: "top",
+          }
+        );
       }
       setIsLoading(false);
     },
@@ -123,7 +131,7 @@ export default function EditDriver() {
 
       const response = await getDriverById(id || "");
 
-      if (response?.data && response.result === "success") {
+      if (response?.data && response?.result === "success") {
         setImageToShow(
           response.data.profile_picture !== "profile-pic-uuid"
             ? response.data.profile_picture || ""

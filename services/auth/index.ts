@@ -9,12 +9,10 @@ export async function login(data: ILogin): Promise<ILoginResponse> {
     },
     body: JSON.stringify({ ...data }),
   })
-    .then((res) => res)
+    .then((res) => res.json())
     .catch((err) => err.response);
 
-  const user = await response.json();
-
-  return user;
+  return response;
 }
 
 export async function driverLogin(data: ILogin): Promise<ILoginResponse> {
@@ -25,10 +23,8 @@ export async function driverLogin(data: ILogin): Promise<ILoginResponse> {
     },
     body: JSON.stringify({ ...data }),
   })
-    .then((res) => res)
+    .then((res) => res.json())
     .catch((err) => err.response);
 
-  const user = await response.json();
-
-  return user;
+  return response;
 }

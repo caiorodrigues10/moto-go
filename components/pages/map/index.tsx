@@ -118,10 +118,14 @@ export default function MapTeste() {
     const response = await getServiceOrder({ limit: 1000, page: 0 });
 
     if (response?.result === "success") {
-      const raceActive = response.data?.list.find((e) => e.end_at === null);
+      const raceActive = response.data?.list.find(
+        (e) => e.active === true && e.end_at === null
+      );
 
       if (raceActive) {
-        setRaceActive(raceActive || {});
+        setRaceActive(raceActive);
+      } else {
+        setRaceActive({} as IListServiceOrders);
       }
     }
   }, []);
@@ -185,7 +189,7 @@ export default function MapTeste() {
           <Polyline coordinates={route} strokeColor="hotpink" strokeWidth={3} />
         )}
       </MapView>
-      {!raceActive?.id && (
+      {(!raceActive?.id || !raceActive?.active) && (
         <SelectTypeService currentLocation={currentLocation} />
       )}
       {focusSearch && <SelectPoints />}
@@ -194,7 +198,12 @@ export default function MapTeste() {
         fetchServiceOrderActive={fetchServiceOrderActive}
       />
       {isOpenSelectDriver && <SelectDriver />}
-      {raceActive?.id && <ServiceOrderActive raceActive={raceActive} />}
+      {raceActive?.id && raceActive?.active && (
+        <ServiceOrderActive
+          raceActive={raceActive}
+          fetchServiceOrderActive={fetchServiceOrderActive}
+        />
+      )}
     </View>
   );
 }
