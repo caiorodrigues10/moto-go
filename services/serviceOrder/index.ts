@@ -57,8 +57,6 @@ export async function updateServiceOrder(
 ): Promise<AppResponse> {
   const token = await getValueLocal("token");
 
-  console.log(data);
-
   const response = await fetch(`${api}/serviceOrders/${id}`, {
     method: "PUT",
     headers: {
