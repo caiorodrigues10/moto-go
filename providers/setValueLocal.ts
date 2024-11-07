@@ -1,4 +1,5 @@
 import { IUserLogin } from "@/services/auth/types";
+import { ICreateServiceOrders } from "@/services/serviceOrder/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function setUserLocal({
@@ -18,6 +19,25 @@ export async function setUserLocal({
       ["token", token],
       ["typeUser", typeUser],
     ]);
+  } catch (e: any) {
+    console.error("Error to save data in AsyncStorage", e);
+    return { error: true, message: e.message || "Error" };
+  }
+}
+
+export async function setServiceOrder({
+  data,
+}: {
+  data: Omit<
+    ICreateServiceOrders & {
+      dataDriver: { name: string; id: number };
+      serviceOrderName: string;
+    },
+    "userId"
+  >;
+}) {
+  try {
+    await AsyncStorage.setItem("dataServiceOrder", JSON.stringify(data));
   } catch (e: any) {
     console.error("Error to save data in AsyncStorage", e);
     return { error: true, message: e.message || "Error" };

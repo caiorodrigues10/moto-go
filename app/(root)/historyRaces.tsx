@@ -21,9 +21,7 @@ export default function AcceptedRacesHistory() {
       <GilroyText style={styles.title}>Histórico de corridas</GilroyText>
       <FlatList
         style={styles.flatList}
-        data={dataHistory?.data?.list.filter(
-          (e) => (!e.active && e.end_at) || (!e.active && e.accepted)
-        )}
+        data={dataHistory?.data?.list}
         keyExtractor={(item) => String(item.id)}
         ListEmptyComponent={
           <View
@@ -63,12 +61,14 @@ export default function AcceptedRacesHistory() {
                 </GilroyText>
               )}
             </View>
-            <GilroyText
-              style={[styles.estimatedTime, { marginTop: 8 }]}
-              weight="medium"
-            >
-              Usuário: {item.user_name}
-            </GilroyText>
+            {item.driver_name && (
+              <GilroyText
+                style={[styles.estimatedTime, { marginTop: 8 }]}
+                weight="medium"
+              >
+                Motorista: {item.driver_name}
+              </GilroyText>
+            )}
             <GilroyText style={styles.estimatedTime} weight="medium">
               Serviço prestado: {item.service_type_name}
             </GilroyText>
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: 24,
+    marginTop: -70,
   },
   title: {
     textAlign: "center",

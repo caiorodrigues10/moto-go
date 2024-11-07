@@ -9,6 +9,8 @@ import * as Device from "expo-device";
 import { Alert, Platform } from "react-native";
 import { setValueLocal } from "@/providers/setValueLocal";
 import { updateFCMTokenDriver } from "@/services/drivers";
+import * as Location from "expo-location";
+import { useAppDriverContext } from "@/context/AppDriverContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +56,6 @@ export function DriverLayout() {
       }
 
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log("Token de Push Notification: ", token);
     } else {
       Alert.alert(
         "Atenção",
@@ -82,16 +83,6 @@ export function DriverLayout() {
       }
     });
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        console.log("Notificação recebida: ", notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Resposta para notificação: ", response);
-      });
-
     return () => {
       Notifications.removeNotificationSubscription(
         notificationListener.current
@@ -99,6 +90,39 @@ export function DriverLayout() {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
+  const { currentLocation, setCurrentLocation } = useAppDriverContext();
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        return;
+      }
+
+      Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 10,
+        },
+        (location) => {
+          const { latitude, longitude } = location.coords;
+          const newLocation = { latitude, longitude };
+
+          if (
+            !currentLocation ||
+            Math.abs(currentLocation.latitude - newLocation.latitude) >
+              0.0001 ||
+            Math.abs(currentLocation.longitude - newLocation.longitude) > 0.0001
+          ) {
+            setCurrentLocation(newLocation);
+          }
+        }
+      );
+    })();
+  }, [currentLocation]);
 
   return (
     <Tab.Navigator

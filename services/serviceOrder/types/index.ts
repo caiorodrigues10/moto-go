@@ -27,16 +27,23 @@ interface ICreateServiceOrders {
   driver_id: number | null;
   user_id: number;
   comments: string | null;
+  full_address: string | null;
+  full_address_destiny: string | null;
 }
 
 interface IListServiceOrders
   extends Omit<IServiceOrders, "initial_location" | "final_location"> {
-  init_lat: string;
-  init_long: string;
-  final_lat: string;
-  final_long: string;
+  init_lat: number;
+  init_long: number;
+  final_lat: number;
+  final_long: number;
   user_name: string;
   driver_name: string | null;
+  distance: string | null;
+  duration: string | null;
+  full_address: string | null;
+  full_address_destiny: string | null;
+  service_type_name: string;
 }
 
 interface IResponseListServiceOrders extends AppResponse {
@@ -46,9 +53,13 @@ interface IResponseListServiceOrders extends AppResponse {
   };
 }
 
+interface IResponseListServiceOrderByUser extends AppResponse {
+  data?: IListServiceOrders;
+}
+
 interface IUpdateServiceOrder {
   comments?: string;
-  driver_id?: number;
+  driver_id?: number | null;
   accepted?: boolean;
 }
 
@@ -58,4 +69,5 @@ export type {
   IResponseListServiceOrders,
   IListServiceOrders,
   IUpdateServiceOrder,
+  IResponseListServiceOrderByUser,
 };

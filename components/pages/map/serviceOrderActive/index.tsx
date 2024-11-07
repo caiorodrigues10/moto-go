@@ -1,24 +1,27 @@
 import { GilroyText } from "@/components/GilroyText";
 import { View } from "@/components/Themed";
 import { useAppContext } from "@/context/AppContext";
-import { Coordinate } from "@/services/Coordinate";
 import { getDrivers } from "@/services/drivers";
 import { IDriver } from "@/services/drivers/types";
 import { cancelServiceOrder } from "@/services/serviceOrder";
-import { IListServiceOrders } from "@/services/serviceOrder/types";
+import {
+  IListServiceOrders,
+  IResponseListServiceOrderByUser,
+} from "@/services/serviceOrder/types";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
+import { KeyedMutator } from "swr";
 
 export function ServiceOrderActive({
   raceActive,
   fetchServiceOrderActive,
 }: {
   raceActive: IListServiceOrders;
-  fetchServiceOrderActive: () => Promise<void>;
+  fetchServiceOrderActive: KeyedMutator<IResponseListServiceOrderByUser>;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [drivers, setDrivers] = useState([] as IDriver[]);
@@ -26,40 +29,9 @@ export function ServiceOrderActive({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [selectedDriver, setSelectedDriver] = useState<number | null>(null);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const toast = useToast();
-  const { setVisibleModalConfirmService } = useAppContext();
-
-  async function getTravelTime({
-    destinations,
-    origins,
-  }: {
-    origins: Coordinate;
-    destinations: Coordinate;
-  }) {
-    const originCoords = `${origins.latitude},${origins.longitude}`;
-    const destinationCoords = `${destinations.latitude},${destinations.longitude}`;
-
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${originCoords}&destinations=${destinationCoords}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY_MATRIX}`
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.error("Erro na requisição:", err);
-        throw new Error("Erro ao buscar dados da API do Google");
-      });
-
-    if (response.status === "OK") {
-      const elements = response.rows[0].elements[0];
-      const distance = elements.distance.text;
-      const duration = elements.duration.text;
-
-      setDuration(duration);
-      setDistance(distance);
-    }
-  }
+  const { clearService } = useAppContext();
 
   const fetchDrivers = useCallback(
     async (page: number) => {
@@ -110,7 +82,7 @@ export function ServiceOrderActive({
         }
       );
       await fetchServiceOrderActive();
-      setVisibleModalConfirmService(true);
+      clearService();
     } else {
       toast.show(
         response?.message || "Serviço indisponível, tente novamente mais tarde",
@@ -127,29 +99,11 @@ export function ServiceOrderActive({
     fetchDrivers(page);
   }, [page]);
 
-  useEffect(() => {
-    getTravelTime({
-      destinations: {
-        latitude: Number(raceActive.final_lat),
-        longitude: Number(raceActive.final_long),
-      },
-      origins: {
-        latitude: Number(raceActive.init_lat),
-        longitude: Number(raceActive.init_long),
-      },
-    });
-  }, [raceActive]);
-
   return (
     <View style={styles.overlaySearch}>
       <StatusBar style="light" />
       <View style={styles.container}>
         {raceActive.accepted ? (
-          <View style={styles.containerRaceActive}>
-            <GilroyText>Motorista responsável</GilroyText>
-            <GilroyText>{raceActive?.driver_name}</GilroyText>
-          </View>
-        ) : (
           <View style={styles.containerRaceAwait}>
             <GilroyText style={{ marginTop: 12, color: "#ffffff95" }}>
               Previsão de chegada
@@ -159,7 +113,7 @@ export function ServiceOrderActive({
               style={{ fontSize: 18, marginBottom: 8 }}
               weight="medium"
             >
-              {duration}
+              {raceActive.duration}
             </GilroyText>
 
             <View
@@ -197,7 +151,82 @@ export function ServiceOrderActive({
               Distância
             </GilroyText>
             <GilroyText style={{ fontSize: 20 }} weight="medium">
-              {distance}
+              {raceActive.distance}
+            </GilroyText>
+            <GilroyText style={{ marginTop: 14, fontSize: 14 }} weight="medium">
+              Motorista responsável
+            </GilroyText>
+            <GilroyText style={{ fontSize: 20 }} weight="medium">
+              {raceActive?.driver_name || "Aguardando o motorista responsável"}
+            </GilroyText>
+
+            <GilroyText style={{ marginTop: 14, fontSize: 14 }} weight="medium">
+              Observações
+            </GilroyText>
+            <GilroyText style={{ fontSize: 20 }} weight="medium">
+              {raceActive?.comments || "Nenhuma observação"}
+            </GilroyText>
+
+            <Button
+              mode="contained"
+              buttonColor="#ff0000"
+              onPress={onCancelServiceOrder}
+              style={{ width: "100%", marginTop: 14 }}
+            >
+              <GilroyText style={{ color: "#fff" }} weight="bold">
+                Cancelar
+              </GilroyText>
+            </Button>
+          </View>
+        ) : (
+          <View style={styles.containerRaceAwait}>
+            <GilroyText style={{ marginTop: 12, color: "#ffffff95" }}>
+              Previsão de chegada
+            </GilroyText>
+
+            <GilroyText
+              style={{ fontSize: 18, marginBottom: 8 }}
+              weight="medium"
+            >
+              {raceActive.duration}
+            </GilroyText>
+
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+                gap: 16,
+              }}
+            >
+              <LottieView
+                source={require("../../../../assets/images/loading-bar.json")}
+                autoPlay
+                duration={4000}
+                style={{
+                  width: "100%",
+                  height: 4,
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+                marginTop: 4,
+                paddingRight: 12,
+              }}
+            >
+              <View style={styles.point} />
+              <GilroyText style={{ fontSize: 16 }} weight="medium">
+                Aguardando o motorista aceitar a ordem de serviço
+              </GilroyText>
+            </View>
+            <GilroyText style={{ marginTop: 14, fontSize: 14 }} weight="medium">
+              Distância
+            </GilroyText>
+            <GilroyText style={{ fontSize: 20 }} weight="medium">
+              {raceActive.distance}
             </GilroyText>
             <GilroyText style={{ marginTop: 14, fontSize: 14 }} weight="medium">
               Motorista responsável

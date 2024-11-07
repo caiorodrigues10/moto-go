@@ -1,58 +1,28 @@
 import { useAppDriverContext } from "@/context/AppDriverContext";
 import { Coordinate } from "@/services/Coordinate";
 import axios from "axios";
-import * as Location from "expo-location";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useRef, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import { useToast } from "react-native-toast-notifications";
 import { AcceptRace } from "./acceptRace";
-import { useFocusEffect } from "expo-router";
 
-const locationIcon = require("../../../../../assets/images/location-icon.png");
 const motoIcon = require("../../../../../assets/images/moto-icon.png");
 const flagRacing = require("../../../../../assets/images/racing-flag.png");
 
 export function ConfirmRace() {
-  const { destination, route, setRoute, setIsInvalidRace } =
-    useAppDriverContext();
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
-    null
-  );
+  const {
+    destination,
+    route,
+    setRoute,
+    setIsInvalidRace,
+    currentLocation,
+    setCurrentLocation,
+  } = useAppDriverContext();
   const [isLoading, setIsLoading] = useState(false);
   const mapRef = useRef<MapView | null>(null);
   const toast = useToast();
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
-        return;
-      }
-
-      Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 5000,
-          distanceInterval: 10,
-        },
-        (location) => {
-          const { latitude, longitude } = location.coords;
-          const newLocation = { latitude, longitude };
-
-          if (
-            !currentLocation ||
-            Math.abs(currentLocation.latitude - newLocation.latitude) >
-              0.0001 ||
-            Math.abs(currentLocation.longitude - newLocation.longitude) > 0.0001
-          ) {
-            setCurrentLocation(newLocation);
-          }
-        }
-      );
-    })();
-  }, [currentLocation]);
 
   const searchRoute = useCallback(async () => {
     setIsLoading(true);

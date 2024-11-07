@@ -3,6 +3,7 @@ import { BodyPage } from "@/components/Themed";
 import { deleteValueLocal } from "@/providers/deleteValueLocal";
 import { getValueLocal } from "@/providers/getValueLocal";
 import { phoneMask } from "@/providers/maskProviders";
+import { updateFCMTokenDriver } from "@/services/drivers";
 import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
@@ -17,6 +18,7 @@ export function Profile() {
       deleteValueLocal("email"),
       deleteValueLocal("id"),
       deleteValueLocal("typeUser"),
+      updateFCMTokenDriver({ fcmToken: "" }),
     ]);
 
     router.push("/(auth)/auth");
@@ -65,22 +67,20 @@ export function Profile() {
 
       <Divider style={styles.divider} />
 
-      <GilroyText style={styles.sectionTitle}>
-        Configurações e notificações
-      </GilroyText>
+      <GilroyText style={styles.sectionTitle}>Histórico</GilroyText>
 
       <Button
         mode="contained"
         buttonColor="#ffffff15"
         textColor="#FFE924"
-        // onPress={() => router.push("/notifications")}
+        onPress={() => router.push("/(root)/historyRaces")}
         style={styles.button}
       >
         <View style={styles.buttonContent}>
           <View style={styles.iconAndTextButton}>
-            <Icon name="bell-o" size={16} color="#FFE924" />
+            <Icon name="history" size={16} color="#FFE924" />
             <GilroyText style={styles.buttonText} weight="medium">
-              Notificações
+              Histórico de corridas
             </GilroyText>
           </View>
           <Icon name="chevron-right" size={16} color="#FFE924" />

@@ -14,6 +14,8 @@ export interface AppDriverContextData {
   setIsAccept: (value: string) => void;
   raceInProgress: boolean;
   setRaceInProgress: (value: boolean) => void;
+  currentLocation: Coordinate | null;
+  setCurrentLocation: (value: Coordinate | null) => void;
 }
 
 const AppDriverContext = createContext<AppDriverContextData>(
@@ -31,7 +33,9 @@ const AppDriverProvider = ({ children }: AppDriverProviderProps) => {
   const [isInvalidRace, setIsInvalidRace] = useState(false);
   const [isAccept, setIsAccept] = useState("");
   const [raceInProgress, setRaceInProgress] = useState(false);
-
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
+    null
+  );
   return (
     <AppDriverContext.Provider
       value={{
@@ -47,6 +51,8 @@ const AppDriverProvider = ({ children }: AppDriverProviderProps) => {
         setIsAccept,
         raceInProgress,
         setRaceInProgress,
+        currentLocation,
+        setCurrentLocation,
       }}
     >
       {children}

@@ -1,7 +1,15 @@
 import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
 import { IServiceType } from "@/services/serviceType/types";
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import * as Location from "expo-location";
 
 export interface AppContextData {
   setTelephone: (value: string) => void;
@@ -28,6 +36,9 @@ export interface AppContextData {
   setTypeService: (value: IServiceType) => void;
   isOpenSelectTypeServiceModal: boolean;
   setIsOpenSelectTypeServiceModal: (value: boolean) => void;
+  currentLocation: Coordinate | null;
+  setCurrentLocation: (value: Coordinate | null) => void;
+  clearService: () => void;
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -51,6 +62,20 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [typeService, setTypeService] = useState({} as IServiceType);
   const [isOpenSelectTypeServiceModal, setIsOpenSelectTypeServiceModal] =
     useState(false);
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
+    null
+  );
+
+  const clearService = useCallback(() => {
+    setDriver({} as IDriver);
+    setTypeService({} as IServiceType);
+    setRoute([]);
+    setQueryFinal("");
+    setQueryInitial("");
+    setDestination({} as Coordinate);
+    setInitial(currentLocation);
+    setVisibleModalConfirmService(false);
+  }, [currentLocation]);
 
   return (
     <AppContext.Provider
@@ -79,6 +104,9 @@ const AppProvider = ({ children }: AppProviderProps) => {
         setTypeService,
         isOpenSelectTypeServiceModal,
         setIsOpenSelectTypeServiceModal,
+        currentLocation,
+        setCurrentLocation,
+        clearService,
       }}
     >
       {children}

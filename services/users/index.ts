@@ -227,8 +227,6 @@ export async function updateFCMTokenUser(data: {
 }): Promise<AppResponse> {
   const token = await getValueLocal("token");
 
-  console.log(data.fcmToken, "testeee");
-
   const response = await fetch(`${api}/users/fcmToken`, {
     method: "PATCH",
     headers: {
@@ -239,8 +237,6 @@ export async function updateFCMTokenUser(data: {
   })
     .then((res) => res.json())
     .catch((err) => err.response);
-
-  console.log(response);
 
   return response;
 }

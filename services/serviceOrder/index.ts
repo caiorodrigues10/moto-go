@@ -104,3 +104,18 @@ export async function cancelServiceOrder(id: number): Promise<AppResponse> {
 
   return response;
 }
+
+export async function finishServiceOrder(id: number): Promise<AppResponse> {
+  const token = await getValueLocal("token");
+
+  const response = await fetch(`${api}/serviceOrders/${id}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => err.response);
+
+  return response;
+}

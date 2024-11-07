@@ -1,7 +1,13 @@
 import { GilroyText } from "@/components/GilroyText";
 import { useAppContext } from "@/context/AppContext";
+import { getValueLocal } from "@/providers/getValueLocal";
 import { Coordinate } from "@/services/Coordinate";
 import { IDriver } from "@/services/drivers/types";
+import { createServiceOrder } from "@/services/serviceOrder";
+import {
+  ICreateServiceOrders,
+  IResponseListServiceOrderByUser,
+} from "@/services/serviceOrder/types";
 import { IServiceType } from "@/services/serviceType/types";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
@@ -14,19 +20,17 @@ import {
   View,
 } from "react-native";
 import { Button, Divider } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
-import SelectTypeServiceModal from "../selectTypeServiceModal";
-import { createServiceOrder } from "@/services/serviceOrder";
-import { ICreateServiceOrders } from "@/services/serviceOrder/types";
-import { getValueLocal } from "@/providers/getValueLocal";
 import { useToast } from "react-native-toast-notifications";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { KeyedMutator } from "swr";
+import SelectTypeServiceModal from "../selectTypeServiceModal";
 
 export function ConfirmService({
   currentLocation,
   fetchServiceOrderActive,
 }: {
   currentLocation: Coordinate | null;
-  fetchServiceOrderActive: () => Promise<void>;
+  fetchServiceOrderActive: KeyedMutator<IResponseListServiceOrderByUser>;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -325,6 +329,8 @@ export function ConfirmService({
           mode="contained"
           buttonColor="#FFE924"
           style={{ marginBottom: 24 }}
+          textColor="#000"
+          loading={isLoading}
           onPress={() => {
             const userId = getValueLocal("id");
 
@@ -342,6 +348,8 @@ export function ConfirmService({
               },
               service_type_id: typeService.id,
               user_id: Number(userId),
+              full_address: queryInitial,
+              full_address_destiny: queryFinal,
             });
           }}
         >

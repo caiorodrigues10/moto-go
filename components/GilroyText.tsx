@@ -1,9 +1,8 @@
 import React from "react";
-import { Text, TextProps, StyleSheet } from "react-native";
+import { Text, TextProps, StyleSheet, StyleProp } from "react-native";
 
 interface GilroyTextProps extends TextProps {
   weight?: "bold" | "light" | "medium";
-  style?: object;
 }
 
 export function GilroyText(props: GilroyTextProps) {

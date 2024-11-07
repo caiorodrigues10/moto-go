@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { router } from "expo-router";
+import LottieView from "lottie-react-native";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { GilroyText } from "../../components/GilroyText";
 import { BodyPage, View } from "../../components/Themed";
-import LottieView from "lottie-react-native";
 
 const Locale = require("../../assets/images/icon-location.png");
 
@@ -17,7 +17,7 @@ export default function ActiveLocale() {
       setIsLoading(true);
       const servicesEnabled = await Location.hasServicesEnabledAsync();
       if (servicesEnabled) {
-        router.replace("/(root)/teste");
+        router.replace("/(root)/map");
       }
       setIsLoading(false);
     };

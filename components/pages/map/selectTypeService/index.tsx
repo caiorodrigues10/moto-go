@@ -24,28 +24,12 @@ export default function SelectTypeService({
   const {
     setTypeService,
     setVisibleModalConfirmService,
-    setDriver,
-    setRoute,
-    setInitial,
-    setDestination,
-    setQueryFinal,
-    setQueryInitial,
+    clearService,
     setFocusSearch,
     route,
   } = useAppContext();
 
   const toast = useToast();
-
-  const clearService = useCallback(() => {
-    setDriver({} as IDriver);
-    setTypeService({} as IServiceType);
-    setRoute([]);
-    setQueryFinal("");
-    setQueryInitial("");
-    setDestination({} as Coordinate);
-    setInitial(currentLocation);
-    setVisibleModalConfirmService(false);
-  }, [currentLocation]);
 
   const fetchTypeService = useCallback(
     async (page: number) => {

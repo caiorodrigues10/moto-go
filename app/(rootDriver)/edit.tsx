@@ -1,7 +1,13 @@
-import { SelectItems } from "@/components/SelectItems";
-import { flags } from "@/constants/flags";
+import { getValueLocal } from "@/providers/getValueLocal";
+import { phoneMask } from "@/providers/maskProviders";
+import {
+  convertFileToBase64,
+  convertUrlToBase64,
+} from "@/providers/normalizeBase64";
+import { setValueLocal } from "@/providers/setValueLocal";
 import { getDriverById, updateDriver } from "@/services/drivers";
-import { IDriver, IUpdateDriver } from "@/services/drivers/types";
+import { IUpdateDriver } from "@/services/drivers/types";
+import { isBase64 } from "@/utils/isBase64";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -21,14 +27,6 @@ import { z } from "zod";
 import { GilroyText } from "../../components/GilroyText";
 import { TextInputCustom } from "../../components/TextInputCustom";
 import { BodyPage } from "../../components/Themed";
-import { getValueLocal } from "@/providers/getValueLocal";
-import { phoneMask } from "@/providers/maskProviders";
-import {
-  convertFileToBase64,
-  convertUrlToBase64,
-} from "@/providers/normalizeBase64";
-import { isBase64 } from "@/utils/isBase64";
-import { setValueLocal } from "@/providers/setValueLocal";
 
 const schema = z.object({
   name: z

@@ -1,19 +1,19 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useEffect, useRef } from "react";
-import { Alert, Platform, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import MapTeste from "./pages/map";
-import { Profile } from "./pages/profile";
 import AddressList from "@/app/(root)/address";
-import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
 import { setValueLocal } from "@/providers/setValueLocal";
 import { updateFCMTokenUser } from "@/services/users";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import React, { useEffect, useRef } from "react";
+import { Alert, Platform } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Map } from "./pages/map";
+import { Profile } from "./pages/profile";
 
 const Tab = createBottomTabNavigator();
 
 function MapScreen() {
-  return <MapTeste />;
+  return <Map />;
 }
 
 function LocationsScreen() {

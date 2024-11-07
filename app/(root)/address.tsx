@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { GilroyText } from "../../components/GilroyText";
-import { BodyPage, View } from "../../components/Themed";
-import { ActivityIndicator, Button, Divider } from "react-native-paper";
-import { router } from "expo-router";
 import { NewAddress } from "@/components/pages/address/newAddress";
+import { UpdateAddress } from "@/components/pages/address/updateAddress";
 import { getUserAddress } from "@/services/users";
 import { IUserAddress } from "@/services/users/types";
-import { useToast } from "react-native-toast-notifications";
 import LottieView from "lottie-react-native";
-import { UpdateAddress } from "@/components/pages/address/updateAddress";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Button, Divider } from "react-native-paper";
+import { useToast } from "react-native-toast-notifications";
+import { GilroyText } from "../../components/GilroyText";
+import { BodyPage, View } from "../../components/Themed";
 
 export default function AddressList() {
   const [newAddress, setNewAddress] = useState(false);

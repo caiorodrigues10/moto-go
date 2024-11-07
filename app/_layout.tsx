@@ -56,7 +56,7 @@ function RootLayoutNav() {
         if (typeUser === "driver") {
           router.replace("/(rootDriver)/races");
         } else {
-          router.replace("/(root)/teste");
+          router.replace("/(root)/map");
         }
       } else {
         router.replace("/(welcome)");
@@ -108,10 +108,7 @@ function RootLayoutNav() {
                     name="(root)/map"
                     options={{ headerShown: false }}
                   />
-                  <Stack.Screen
-                    name="(root)/teste"
-                    options={{ headerShown: false }}
-                  />
+                  <Stack.Screen name="(root)/historyRaces" />
                   <Stack.Screen
                     name="(rootDriver)/races"
                     options={{ headerShown: false }}

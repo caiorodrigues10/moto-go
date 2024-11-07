@@ -29,9 +29,6 @@ export function SelectPoints() {
   const [suggestionsFinal, setSuggestionsFinal] = useState<IAddressComplete[]>(
     []
   );
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
-    null
-  );
   const [isFocusInitial, setIsFocusInitial] = useState(false);
   const [isFocusFinal, setIsFocusFinal] = useState(false);
   const toast = useToast();
@@ -52,6 +49,8 @@ export function SelectPoints() {
     setQueryFinal,
     setQueryInitial,
     setVisibleModalConfirmService,
+    currentLocation,
+    setCurrentLocation,
   } = useAppContext();
 
   const fetchCurrentAddress = async (coordinate: Coordinate) => {
@@ -169,7 +168,6 @@ export function SelectPoints() {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permissão de localização não concedida.");
         return;
       }
 

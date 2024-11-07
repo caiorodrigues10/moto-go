@@ -1,6 +1,11 @@
 import { SelectPoints } from "@/components/SelectPoints";
 import { useAppContext } from "@/context/AppContext";
+import { useApi } from "@/providers/useApi";
 import { Coordinate } from "@/services/Coordinate";
+import {
+  IListServiceOrders,
+  IResponseListServiceOrderByUser,
+} from "@/services/serviceOrder/types";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
@@ -8,80 +13,45 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import { ConfirmService } from "./confirmService";
 import { SelectDriver } from "./selectDriver";
 import SelectTypeService from "./selectTypeService";
-import { getServiceOrder } from "@/services/serviceOrder";
-import { IListServiceOrders } from "@/services/serviceOrder/types";
 import { ServiceOrderActive } from "./serviceOrderActive";
 
 const locationIcon = require("../../../assets/images/location-icon.png");
-// const motoIcon = require("../../../assets/images/moto-icon.png");
 const flagRacing = require("../../../assets/images/racing-flag.png");
 
-export default function MapTeste() {
+export function Map() {
+  const [raceActive, setRaceActive] = useState({} as IListServiceOrders);
+  const mapRef = useRef<MapView | null>(null);
+
   const {
-    setFocusSearch,
     focusSearch,
     destination,
     initial,
-    setInitial,
-    setDestination,
     route,
-    setRoute,
-    setVisibleModalConfirmService,
-    setQueryFinal,
-    setQueryInitial,
     isOpenSelectDriver,
+    currentLocation,
+    setCurrentLocation,
+    clearService,
   } = useAppContext();
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
-    null
+
+  const { data, mutate } = useApi<IResponseListServiceOrderByUser>(
+    "/serviceOrders/byUser"
   );
-  // const [motoLocation, setMotoLocation] = useState<Coordinate | null>(null);
-  const mapRef = useRef<MapView | null>(null);
-  const [raceActive, setRaceActive] = useState({} as IListServiceOrders);
 
-  // const routeIndex = useRef(0);
-  // const intervalId = useRef<number | NodeJS.Timeout | null>(null);
+  const fetchServiceOrderActive = useCallback(async () => {
+    if (raceActive && !data?.data) {
+      clearService();
+      setRaceActive({} as IListServiceOrders);
+      return;
+    }
 
-  // useEffect(() => {
-  //   if (route.length > 0 && motoLocation) {
-  //     moveMotoAlongRoute();
-  //   }
-  // }, [route, motoLocation]);
-
-  // const moveMotoAlongRoute = () => {
-  //   if (!motoLocation || route.length === 0) return;
-
-  //   if (intervalId.current) {
-  //     clearInterval(intervalId.current as NodeJS.Timeout);
-  //   }
-
-  //   intervalId.current = setInterval(() => {
-  //     if (routeIndex.current < route.length) {
-  //       const nextLocation = route[routeIndex.current];
-  //       setMotoLocation(nextLocation);
-  //       mapRef.current?.animateToRegion(
-  //         {
-  //           ...nextLocation,
-  //           latitudeDelta: 0.01,
-  //           longitudeDelta: 0.01,
-  //         },
-  //         1000
-  //       );
-  //       routeIndex.current++;
-  //     } else {
-  //       if (intervalId.current) {
-  //         clearInterval(intervalId.current as NodeJS.Timeout);
-  //       }
-  //     }
-  //   }, 2000);
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (intervalId.current) {
-  //       clearInterval(intervalId.current as NodeJS.Timeout);
-  //     }
-  //   };
-  // }, []);
+    if (data) {
+      if (data?.data) {
+        setRaceActive(data.data);
+      } else {
+        setRaceActive({} as IListServiceOrders);
+      }
+    }
+  }, [data, clearService]);
 
   useEffect(() => {
     (async () => {
@@ -114,25 +84,9 @@ export default function MapTeste() {
     })();
   }, [currentLocation]);
 
-  const fetchServiceOrderActive = useCallback(async () => {
-    const response = await getServiceOrder({ limit: 1000, page: 0 });
-
-    if (response?.result === "success") {
-      const raceActive = response.data?.list.find(
-        (e) => e.active === true && e.end_at === null
-      );
-
-      if (raceActive) {
-        setRaceActive(raceActive);
-      } else {
-        setRaceActive({} as IListServiceOrders);
-      }
-    }
-  }, []);
-
   useEffect(() => {
     fetchServiceOrderActive();
-  }, []);
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -174,17 +128,6 @@ export default function MapTeste() {
         <Marker coordinate={destination} title="Destino">
           <Image source={flagRacing} style={{ width: 30, height: 30 }} />
         </Marker>
-        {/* {motoLocation && (
-          <Marker coordinate={motoLocation}>
-            <Image
-              source={motoIcon}
-              style={{
-                width: 30,
-                height: 30,
-              }}
-            />
-          </Marker>
-        )} */}
         {route.length > 0 && (
           <Polyline coordinates={route} strokeColor="hotpink" strokeWidth={3} />
         )}
@@ -195,13 +138,13 @@ export default function MapTeste() {
       {focusSearch && <SelectPoints />}
       <ConfirmService
         currentLocation={currentLocation}
-        fetchServiceOrderActive={fetchServiceOrderActive}
+        fetchServiceOrderActive={mutate}
       />
       {isOpenSelectDriver && <SelectDriver />}
-      {raceActive?.id && raceActive?.active && (
+      {raceActive?.id && (
         <ServiceOrderActive
           raceActive={raceActive}
-          fetchServiceOrderActive={fetchServiceOrderActive}
+          fetchServiceOrderActive={mutate}
         />
       )}
     </View>
