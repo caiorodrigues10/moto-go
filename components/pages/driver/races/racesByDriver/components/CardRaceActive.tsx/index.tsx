@@ -12,7 +12,7 @@ import {
 } from "@/services/serviceOrder/types";
 import { calculateTimeSinceStart } from "@/utils/calculateTimeSinceStart";
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 import { KeyedMutator } from "swr";
@@ -51,6 +51,25 @@ export const CardRaceActive = ({
       );
     }
   }, [toast, mutate, item]);
+
+  const showCancelConfirmation = () => {
+    Alert.alert(
+      "Confirmação de Cancelamento",
+      "Tem certeza que deseja cancelar este serviço?",
+      [
+        {
+          text: "Fechar",
+          style: "cancel",
+        },
+        {
+          text: "Cancelar",
+          onPress: () => onCancelServiceOrder(),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const onFinishServiceOrder = useCallback(async () => {
     const response = await finishServiceOrder(item.id);
@@ -166,7 +185,7 @@ export const CardRaceActive = ({
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={onCancelServiceOrder}>
+        <TouchableOpacity onPress={showCancelConfirmation}>
           <View
             style={{
               flexDirection: "row",
@@ -181,7 +200,7 @@ export const CardRaceActive = ({
           >
             <Icon source="close" color="#e74c3c" size={24} />
             <GilroyText style={{ color: "#e74c3c" }} weight="bold">
-              Canelar
+              Cancelar
             </GilroyText>
           </View>
         </TouchableOpacity>

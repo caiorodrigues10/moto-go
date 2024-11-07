@@ -6,10 +6,8 @@ import {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
-import * as Location from "expo-location";
 
 export interface AppContextData {
   setTelephone: (value: string) => void;

@@ -6,7 +6,7 @@ import { IDriver } from "@/services/drivers/types";
 import { getServicesType } from "@/services/serviceType";
 import { IServiceType } from "@/services/serviceType/types";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 
@@ -71,12 +71,24 @@ export default function SelectTypeService({
     fetchTypeService(page);
   }, [page]);
 
-  const loadMoreDrivers = () => {
-    if (!isLoadingMore && hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
+  const showCancelConfirmation = () => {
+    Alert.alert(
+      "Confirmação de Cancelamento",
+      "Tem certeza que deseja cancelar este serviço?",
+      [
+        {
+          text: "Fechar",
+          style: "cancel",
+        },
+        {
+          text: "Cancelar",
+          onPress: () => clearService(),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
   };
-  1;
 
   return (
     <>
@@ -108,7 +120,7 @@ export default function SelectTypeService({
                 <Button
                   mode="contained"
                   buttonColor="#ff0000"
-                  onPress={clearService}
+                  onPress={showCancelConfirmation}
                   style={{ width: "48%" }}
                 >
                   <GilroyText style={{ color: "#fff" }} weight="bold">

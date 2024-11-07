@@ -12,7 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
@@ -127,6 +127,25 @@ export function UpdateAddress({
       setValue("district", response.bairro);
     }
   }, []);
+
+  const showDeleteConfirmation = () => {
+    Alert.alert(
+      "Confirmação de Exclusão",
+      "Tem certeza que deseja excluir este endereço?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          onPress: () => deleteAddress(),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const deleteAddress = useCallback(async () => {
     setIsLoadingDelete(true);
@@ -363,7 +382,7 @@ export function UpdateAddress({
             <Button
               mode="contained"
               buttonColor="#ff0000"
-              onPress={deleteAddress}
+              onPress={showDeleteConfirmation}
               disabled={isLoading}
               loading={isLoadingDelete}
               style={{ width: "48%" }}

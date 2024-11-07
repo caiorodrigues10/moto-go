@@ -11,7 +11,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 import { KeyedMutator } from "swr";
@@ -68,6 +68,25 @@ export function ServiceOrderActive({
     },
     [toast]
   );
+
+  const showCancelConfirmation = () => {
+    Alert.alert(
+      "Confirmação de Cancelamento",
+      "Tem certeza que deseja cancelar este serviço?",
+      [
+        {
+          text: "Fechar",
+          style: "cancel",
+        },
+        {
+          text: "Cancelar",
+          onPress: () => onCancelServiceOrder(),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const onCancelServiceOrder = useCallback(async () => {
     setIsLoadingCancel(true);
@@ -170,7 +189,7 @@ export function ServiceOrderActive({
             <Button
               mode="contained"
               buttonColor="#ff0000"
-              onPress={onCancelServiceOrder}
+              onPress={showCancelConfirmation}
               style={{ width: "100%", marginTop: 14 }}
             >
               <GilroyText style={{ color: "#fff" }} weight="bold">
@@ -245,7 +264,7 @@ export function ServiceOrderActive({
             <Button
               mode="contained"
               buttonColor="#ff0000"
-              onPress={onCancelServiceOrder}
+              onPress={showCancelConfirmation}
               style={{ width: "100%", marginTop: 14 }}
             >
               <GilroyText style={{ color: "#fff" }} weight="bold">
