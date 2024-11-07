@@ -20,6 +20,7 @@ export function TextInputCustom({
   errorMessage,
   styles = {},
   style,
+  multiline = false,
   ...props
 }: TextInputCustomProps) {
   return (
@@ -34,7 +35,7 @@ export function TextInputCustom({
         activeOutlineColor="transparent"
         outlineColor="transparent"
         selectionColor="white"
-        multiline={false}
+        multiline={multiline}
         {...props}
       />
       <GilroyText style={[stylesSheet.errorMessage, styles.errorMessage]}>

@@ -54,6 +54,8 @@ export function ConfirmService({
     isOpenSelectTypeServiceModal,
     initial,
     destination,
+    observationsValue,
+    setIsOpenObservations,
   } = useAppContext();
 
   const clearService = useCallback(() => {
@@ -324,6 +326,48 @@ export function ConfirmService({
             style={{ color: "#FFE924", marginLeft: "auto" }}
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonMenu}
+          onPress={() => {
+            setIsOpenObservations(true);
+            setVisibleModalConfirmService(false);
+          }}
+        >
+          <View style={[styles.containerIconAndText, { marginTop: 12 }]}>
+            <View style={styles.containerIcon}>
+              <Icon
+                name="file-text-o"
+                size={24}
+                color="#000"
+                style={styles.icon}
+              />
+            </View>
+            <View
+              style={{
+                gap: 4,
+                width: "100%",
+                maxWidth: "60%",
+              }}
+            >
+              <GilroyText weight="light" style={{ fontSize: 12 }}>
+                Observações:
+              </GilroyText>
+              <GilroyText
+                weight="bold"
+                style={{ fontSize: 16 }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {observationsValue || "Nenhuma observação"}
+              </GilroyText>
+            </View>
+          </View>
+          <Icon
+            name="edit"
+            size={24}
+            style={{ color: "#FFE924", marginLeft: "auto" }}
+          />
+        </TouchableOpacity>
         <Divider style={{ marginTop: "auto", marginBottom: 12 }} />
         <Button
           mode="contained"
@@ -335,9 +379,7 @@ export function ConfirmService({
             const userId = getValueLocal("id");
 
             onSubmit({
-              comments: "",
               driver_id: driver?.id || null,
-
               initial_location: {
                 lat: initial?.latitude!,
                 long: initial?.longitude!,
@@ -350,6 +392,7 @@ export function ConfirmService({
               user_id: Number(userId),
               full_address: queryInitial,
               full_address_destiny: queryFinal,
+              comments: observationsValue,
             });
           }}
         >
@@ -368,7 +411,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    height: 410,
+    height: 460,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,

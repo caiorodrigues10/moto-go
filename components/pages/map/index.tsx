@@ -14,6 +14,7 @@ import { ConfirmService } from "./confirmService";
 import { SelectDriver } from "./selectDriver";
 import SelectTypeService from "./selectTypeService";
 import { ServiceOrderActive } from "./serviceOrderActive";
+import { Observations } from "./observations";
 
 const locationIcon = require("../../../assets/images/location-icon.png");
 const flagRacing = require("../../../assets/images/racing-flag.png");
@@ -31,6 +32,7 @@ export function Map() {
     currentLocation,
     setCurrentLocation,
     clearService,
+    isOpenObservations,
   } = useAppContext();
 
   const { data, mutate } = useApi<IResponseListServiceOrderByUser>(
@@ -147,6 +149,7 @@ export function Map() {
           fetchServiceOrderActive={mutate}
         />
       )}
+      {isOpenObservations && <Observations />}
     </View>
   );
 }

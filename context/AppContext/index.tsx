@@ -39,6 +39,10 @@ export interface AppContextData {
   currentLocation: Coordinate | null;
   setCurrentLocation: (value: Coordinate | null) => void;
   clearService: () => void;
+  isOpenObservations: boolean;
+  setIsOpenObservations: (value: boolean) => void;
+  observationsValue: string;
+  setObservationsValue: (value: string) => void;
 }
 
 const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -65,6 +69,8 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
     null
   );
+  const [isOpenObservations, setIsOpenObservations] = useState(false);
+  const [observationsValue, setObservationsValue] = useState("");
 
   const clearService = useCallback(() => {
     setDriver({} as IDriver);
@@ -75,6 +81,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     setDestination({} as Coordinate);
     setInitial(currentLocation);
     setVisibleModalConfirmService(false);
+    setObservationsValue("");
   }, [currentLocation]);
 
   return (
@@ -107,6 +114,10 @@ const AppProvider = ({ children }: AppProviderProps) => {
         currentLocation,
         setCurrentLocation,
         clearService,
+        isOpenObservations,
+        setIsOpenObservations,
+        observationsValue,
+        setObservationsValue,
       }}
     >
       {children}
