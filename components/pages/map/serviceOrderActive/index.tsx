@@ -28,7 +28,6 @@ export function ServiceOrderActive({
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedDriver, setSelectedDriver] = useState<number | null>(null);
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const toast = useToast();
   const { clearService } = useAppContext();

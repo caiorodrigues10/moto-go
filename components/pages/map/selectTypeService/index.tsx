@@ -1,8 +1,6 @@
 import { GilroyText } from "@/components/GilroyText";
 import { View } from "@/components/Themed";
 import { useAppContext } from "@/context/AppContext";
-import { Coordinate } from "@/services/Coordinate";
-import { IDriver } from "@/services/drivers/types";
 import { getServicesType } from "@/services/serviceType";
 import { IServiceType } from "@/services/serviceType/types";
 import { useCallback, useEffect, useState } from "react";
@@ -10,11 +8,7 @@ import { Alert, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useToast } from "react-native-toast-notifications";
 
-export default function SelectTypeService({
-  currentLocation,
-}: {
-  currentLocation: Coordinate | null;
-}) {
+export default function SelectTypeService() {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);

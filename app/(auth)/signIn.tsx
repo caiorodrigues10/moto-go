@@ -45,6 +45,7 @@ export default function Login() {
             placement: "top",
           }
         );
+        router.push("/(auth)/login");
       } else {
         toast.show(
           response?.message ||

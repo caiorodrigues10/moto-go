@@ -87,24 +87,6 @@ export function Profile() {
         </View>
       </Button>
 
-      <Button
-        mode="contained"
-        buttonColor="#ffffff15"
-        textColor="#FFE924"
-        // onPress={() => router.push("/security")}
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <View style={styles.iconAndTextButton}>
-            <Icon name="lock" size={16} color="#FFE924" />
-            <GilroyText style={styles.buttonText} weight="medium">
-              Segurança
-            </GilroyText>
-          </View>
-          <Icon name="chevron-right" size={16} color="#FFE924" />
-        </View>
-      </Button>
-
       <Divider style={styles.divider} />
 
       <GilroyText style={styles.sectionTitle}>Suporte</GilroyText>
@@ -113,32 +95,18 @@ export function Profile() {
         mode="contained"
         buttonColor="#ffffff15"
         textColor="#FFE924"
-        // onPress={() => router.push("/help-center")}
+        onPress={() =>
+          router.push(
+            typeUser === "user" ? "/(root)/manual" : "/(rootDriver)/manual"
+          )
+        }
         style={styles.button}
       >
         <View style={styles.buttonContent}>
           <View style={styles.iconAndTextButton}>
             <Icon name="info-circle" size={16} color="#FFE924" />
             <GilroyText style={styles.buttonText} weight="medium">
-              Central de ajuda
-            </GilroyText>
-          </View>
-          <Icon name="chevron-right" size={16} color="#FFE924" />
-        </View>
-      </Button>
-
-      <Button
-        mode="contained"
-        buttonColor="#ffffff15"
-        textColor="#FFE924"
-        // onPress={() => router.push("/report-problem")}
-        style={styles.button}
-      >
-        <View style={styles.buttonContent}>
-          <View style={styles.iconAndTextButton}>
-            <Icon name="flag" size={16} color="#FFE924" />
-            <GilroyText style={styles.buttonText} weight="medium">
-              Reportar problema
+              Manual do {typeUser === "user" ? "usuário" : "motorista"}
             </GilroyText>
           </View>
           <Icon name="chevron-right" size={16} color="#FFE924" />

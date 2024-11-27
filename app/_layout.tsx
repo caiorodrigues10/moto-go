@@ -109,6 +109,10 @@ function RootLayoutNav() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen name="(root)/historyRaces" />
+                  <Stack.Screen name="(root)/manual" />
+
+                  <Stack.Screen name="(rootDriver)/manual" />
+
                   <Stack.Screen
                     name="(rootDriver)/races"
                     options={{ headerShown: false }}
